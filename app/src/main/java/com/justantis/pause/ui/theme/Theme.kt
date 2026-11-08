@@ -1,6 +1,5 @@
-package com.example.pause.ui.theme
+package com.justantis.pause.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

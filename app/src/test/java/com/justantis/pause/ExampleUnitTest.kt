@@ -1,4 +1,4 @@
-package com.example.pause
+package com.justantis.pause
 
 import org.junit.Test
 

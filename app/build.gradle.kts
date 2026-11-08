@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.pause"
+    namespace = "com.justantis.pause"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.example.pause"
+        applicationId = "com.justantis.pause"
         minSdk = 30
         targetSdk = 37
         versionCode = 1
