@@ -1,4 +1,4 @@
-package com.justantis.pause.presentation
+package com.justantis.pause
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
