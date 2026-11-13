@@ -1,4 +1,4 @@
-package com.justantis.pause.ui.theme
+package com.justantis.pause.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
