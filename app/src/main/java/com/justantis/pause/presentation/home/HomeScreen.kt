@@ -47,13 +47,13 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.justantis.pause.R
 import com.justantis.pause.presentation.components.ObserveEffects
+import com.justantis.pause.presentation.components.appLocale
 import com.justantis.pause.presentation.components.formatDuration
 import com.justantis.pause.presentation.components.openAccessibilitySettings
 import com.justantis.pause.presentation.components.openUsageAccessSettings
 import com.justantis.pause.presentation.theme.PauseTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @Composable
 fun HomeRoute(
@@ -149,7 +149,7 @@ fun HomeScreen(
 
 @Composable
 private fun formatDate(date: LocalDate): String {
-    val locale = Locale.forLanguageTag(stringResource(R.string.app_locale_tag))
+    val locale = appLocale()
     val formatter = remember(locale) { DateTimeFormatter.ofPattern("EEEE, d MMMM", locale) }
     return date.format(formatter).replaceFirstChar { it.titlecase(locale) }
 }
