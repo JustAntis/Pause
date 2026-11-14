@@ -176,7 +176,7 @@ private fun ChangeChip(changePercent: Int) {
             text = when {
                 changePercent > 0 -> stringResource(R.string.stats_change_up, changePercent)
                 changePercent < 0 -> stringResource(R.string.stats_change_down, abs(changePercent))
-                else -> stringResource(R.string.stats_change_none)
+                else -> stringResource(R.string.stats_change_none, 0)
             },
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)

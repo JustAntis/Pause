@@ -223,7 +223,7 @@
     <string name="stats_today">Today</string>
     <string name="stats_change_up">+%1$d%% vs previous</string>
     <string name="stats_change_down">−%1$d%% vs previous</string>
-    <string name="stats_change_none">0%% vs previous</string>
+    <string name="stats_change_none">%1$d%% vs previous</string>
     <string name="stats_caption_day">Screen time per hour today. The current hour is highlighted.</string>
     <string name="stats_caption_days">Red: above your goal (%1$s). Highlighted: today.</string>
     <string name="stats_no_apps">No app usage in this period.</string>

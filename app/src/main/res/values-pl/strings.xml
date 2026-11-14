@@ -242,7 +242,7 @@
     <string name="stats_today">Dzisiaj</string>
     <string name="stats_change_up">+%1$d%% vs poprzedni okres</string>
     <string name="stats_change_down">−%1$d%% vs poprzedni okres</string>
-    <string name="stats_change_none">0%% vs poprzedni okres</string>
+    <string name="stats_change_none">%1$d%% vs poprzedni okres</string>
     <string name="stats_caption_day">Czas przed ekranem w każdej godzinie dzisiaj. Bieżąca godzina jest wyróżniona.</string>
     <string name="stats_caption_days">Czerwony: powyżej celu (%1$s). Wyróżniony: dzisiaj.</string>
     <string name="stats_no_apps">Brak użycia aplikacji w tym okresie.</string>

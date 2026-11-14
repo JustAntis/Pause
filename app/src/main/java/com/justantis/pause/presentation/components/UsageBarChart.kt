@@ -9,6 +9,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.Zoom
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
@@ -34,7 +37,8 @@ private val LabelsKey = ExtraStore.Key<List<String>>()
 
 /**
  * A column chart of minutes per bar, based on the Vico setup of the original statistics chart.
- * Each bar is coloured by its [BarStyle]; [labelSpacing] shows every n-th bottom label and
+ * Scrolling and zooming are off and the whole range is fitted to the width, so every bar of the
+ * period is visible. Each bar is coloured by its [BarStyle]; [labelSpacing] shows every n-th bottom label and
  * [axisStepMinutes] sets the step of the vertical axis.
  */
 @Composable
@@ -92,7 +96,9 @@ fun UsageBarChart(
             )
         ),
         modelProducer = modelProducer,
-        modifier = modifier.height(200.dp)
+        modifier = modifier.height(200.dp),
+        scrollState = rememberVicoScrollState(scrollEnabled = false),
+        zoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.Content, minZoom = Zoom.Content)
     )
 }
 
