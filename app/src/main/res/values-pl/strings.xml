@@ -1,6 +1,14 @@
 <resources>
     <string name="accessibility_service_description">Pause używa tej usługi wyłącznie do sprawdzenia, którą aplikację otwierasz, aby pokazać ekran przerwy, gdy dzienny limit tej aplikacji się wyczerpie lub trwa sesja skupienia. Nie odczytuje, nie zbiera ani nie wysyła niczego, co widzisz lub wpisujesz na ekranie. Wszystkie dane zostają na tym telefonie.</string>
 
+    <!-- Navigation -->
+    <string name="nav_home">Start</string>
+    <string name="nav_statistics">Statystyki</string>
+    <string name="nav_limits">Limity</string>
+    <string name="nav_profile">Profil</string>
+    <string name="focus_title">Tryb skupienia</string>
+    <string name="placeholder_not_ready">Ten ekran nie jest jeszcze gotowy.</string>
+
     <!-- Shared -->
     <string name="stepper_decrease">Zmniejsz</string>
     <string name="stepper_increase">Zwiększ</string>
