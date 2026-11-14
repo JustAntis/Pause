@@ -68,7 +68,7 @@ class StatisticsCalculatorTest {
     }
 
     @Test
-    fun `week averages days with data and marks future days`() {
+    fun `week averages completed days with data, not today, and marks future days`() {
         val result = calculate(
             StatisticsPeriod.WEEK,
             summaries = listOf(summary(LocalDate.of(2026, 11, 12), 120, 50), summary(LocalDate.of(2026, 11, 13), 180, 30)),
@@ -76,10 +76,35 @@ class StatisticsCalculatorTest {
         )
 
         assertEquals(7, result.days.size)
-        assertEquals(minutes(120), result.averageScreenTimeMs)
-        assertEquals(30, result.averageUnlocks)
+        assertEquals(minutes(150), result.averageScreenTimeMs)
+        assertEquals(40, result.averageUnlocks)
+        assertEquals(minutes(60), result.days.single { it.date == saturday }.screenTimeMs)
         assertTrue(result.days.last().isFuture)
         assertFalse(result.days.first().hasData)
+    }
+
+    @Test
+    fun `today is averaged only when it is the only day with data`() {
+        val result = calculate(
+            StatisticsPeriod.MONTH,
+            summaries = listOf(summary(saturday.minusDays(40), 300)),
+            today = live(60, unlocks = 10)
+        )
+
+        assertEquals(minutes(60), result.averageScreenTimeMs)
+        assertEquals(10, result.averageUnlocks)
+    }
+
+    @Test
+    fun `comparison uses completed days only`() {
+        val result = calculate(
+            StatisticsPeriod.WEEK,
+            summaries = listOf(summary(LocalDate.of(2026, 11, 3), 200), summary(LocalDate.of(2026, 11, 13), 100)),
+            today = live(300)
+        )
+
+        assertEquals(minutes(100), result.averageScreenTimeMs)
+        assertEquals(-50, result.changePercent)
     }
 
     @Test

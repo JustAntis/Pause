@@ -8,9 +8,12 @@ import kotlin.math.roundToInt
 
 /**
  * Builds the statistics of a period from the stored day history and today's live usage. Today
- * always comes from the live usage; stored values for today are ignored. Averages are taken over the
- * days of the period that have data, so days before the app was installed and future days do not
- * pull them down. Today counts with its usage so far.
+ * always comes from the live usage; stored values for today are ignored.
+ *
+ * Week and Month averages (screen time, unlocks, and therefore the comparison) use completed days
+ * with data only, so an unfinished today does not pull them down; today is used only when it is the
+ * only day with data. Days without data (before installation, future days) never count. Today's bar
+ * is still part of [PeriodStatistics.days]. Day shows today itself.
  */
 object StatisticsCalculator {
 
@@ -28,11 +31,16 @@ object StatisticsCalculator {
 
         val days = current.days.map { date -> dayTotal(date, today, summaryByDate, todayUsage) }
         val withData = days.filter { it.hasData }
+        val averaged = if (period == StatisticsPeriod.DAY) {
+            withData
+        } else {
+            withData.filter { it.date != today }.ifEmpty { withData }
+        }
         val previousWithData = previous.days
             .map { date -> dayTotal(date, today, summaryByDate, todayUsage) }
             .filter { it.hasData }
 
-        val average = withData.averageOf { it.screenTimeMs }
+        val average = averaged.averageOf { it.screenTimeMs }
         val previousAverage = previousWithData.averageOf { it.screenTimeMs }
 
         return PeriodStatistics(
@@ -45,7 +53,7 @@ object StatisticsCalculator {
             } else {
                 ((average - previousAverage) * 100.0 / previousAverage).roundToInt()
             },
-            averageUnlocks = withData.averageOf { it.unlocks.toLong() }.toInt(),
+            averageUnlocks = averaged.averageOf { it.unlocks.toLong() }.toInt(),
             limitBypasses = limitBypassDates.count { it in current },
             apps = appTotals(current, today, todayUsage, appUsage)
         )
