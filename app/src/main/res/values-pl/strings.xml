@@ -1,6 +1,36 @@
 <resources>
     <string name="accessibility_service_description">Pause używa tej usługi wyłącznie do sprawdzenia, którą aplikację otwierasz, aby pokazać ekran przerwy, gdy dzienny limit tej aplikacji się wyczerpie lub trwa sesja skupienia. Nie odczytuje, nie zbiera ani nie wysyła niczego, co widzisz lub wpisujesz na ekranie. Wszystkie dane zostają na tym telefonie.</string>
 
+    <!-- Shared -->
+    <string name="stepper_decrease">Zmniejsz</string>
+    <string name="stepper_increase">Zwiększ</string>
+    <string name="permission_usage_access_title">Dostęp do danych o użyciu</string>
+    <string name="permission_usage_access_text">Pozwala liczyć czas spędzony w aplikacjach i odblokowania ekranu.</string>
+    <string name="permission_accessibility_title">Usługa ułatwień dostępu</string>
+    <string name="permission_accessibility_text">Pozwala pokazać ekran przerwy, gdy limit się wyczerpie. Aplikacja nie odczytuje zawartości ekranu.</string>
+    <string name="permission_grant">Przyznaj</string>
+    <string name="permission_granted">Przyznano</string>
+    <string name="goal_screen_time_title">Dzienny czas przed ekranem</string>
+    <string name="goal_unlocks_title">Dzienne odblokowania</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_next">Dalej</string>
+    <string name="onboarding_finish">Zakończ</string>
+    <string name="onboarding_welcome_title">Witaj w Pause</string>
+    <string name="onboarding_welcome_subtitle">Spokojniejsza relacja z telefonem, na Twoich zasadach.</string>
+    <string name="onboarding_point_awareness_title">Świadomość</string>
+    <string name="onboarding_point_awareness_text">Zobacz, ile czasu spędzasz w aplikacjach i jak często odblokowujesz telefon.</string>
+    <string name="onboarding_point_motivation_title">Motywacja</string>
+    <string name="onboarding_point_motivation_text">Buduj serię dni w ramach swoich limitów.</string>
+    <string name="onboarding_point_autonomy_title">Autonomia</string>
+    <string name="onboarding_point_autonomy_text">Nic nie jest blokowane na stałe. Krótka pauza przed aplikacją, a decyzja należy do Ciebie.</string>
+    <string name="onboarding_name_label">Twoje imię (opcjonalnie)</string>
+    <string name="onboarding_permissions_title">Dwa uprawnienia</string>
+    <string name="onboarding_permissions_subtitle">Android wymaga włączenia każdego z nich osobno w ustawieniach systemu.</string>
+    <string name="onboarding_privacy_info">Wszystkie dane zostają na tym telefonie. Nic nie jest nigdzie wysyłane.</string>
+    <string name="onboarding_goals_title">Twoje dzienne cele</string>
+    <string name="onboarding_goals_subtitle">Pomagają zobaczyć, jak mija Twój dzień. Możesz je później zmienić.</string>
+
     <!-- Durations -->
     <string name="duration_minutes">%1$d min</string>
     <string name="duration_hours">%1$d h</string>

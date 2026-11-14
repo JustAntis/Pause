@@ -3,6 +3,36 @@
 
     <string name="accessibility_service_description">Pause uses this service only to notice which app you open, so it can show a break screen when that app\'s daily limit is used up or a Focus session is running. It does not read, collect or send anything you see or type on the screen. All data stays on this phone.</string>
 
+    <!-- Shared -->
+    <string name="stepper_decrease">Decrease</string>
+    <string name="stepper_increase">Increase</string>
+    <string name="permission_usage_access_title">Usage access</string>
+    <string name="permission_usage_access_text">Lets the app count time spent in apps and screen unlocks.</string>
+    <string name="permission_accessibility_title">Accessibility service</string>
+    <string name="permission_accessibility_text">Lets the app show the break screen when a limit is used up. The app does not read screen content.</string>
+    <string name="permission_grant">Grant</string>
+    <string name="permission_granted">Granted</string>
+    <string name="goal_screen_time_title">Daily screen time</string>
+    <string name="goal_unlocks_title">Daily unlocks</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_finish">Finish</string>
+    <string name="onboarding_welcome_title">Welcome to Pause</string>
+    <string name="onboarding_welcome_subtitle">A calmer relationship with your phone, on your own terms.</string>
+    <string name="onboarding_point_awareness_title">Awareness</string>
+    <string name="onboarding_point_awareness_text">See how much time you spend in apps and how often you unlock your phone.</string>
+    <string name="onboarding_point_motivation_title">Motivation</string>
+    <string name="onboarding_point_motivation_text">Build a streak of days within your limits.</string>
+    <string name="onboarding_point_autonomy_title">Autonomy</string>
+    <string name="onboarding_point_autonomy_text">Nothing is blocked for good. A short pause before an app, and the decision is yours.</string>
+    <string name="onboarding_name_label">Your name (optional)</string>
+    <string name="onboarding_permissions_title">Two permissions</string>
+    <string name="onboarding_permissions_subtitle">Android requires each to be switched on separately in system settings.</string>
+    <string name="onboarding_privacy_info">All data stays on this phone. Nothing is sent anywhere.</string>
+    <string name="onboarding_goals_title">Your daily goals</string>
+    <string name="onboarding_goals_subtitle">They help you see how your day is going. You can change them later.</string>
+
     <!-- Durations -->
     <string name="duration_minutes">%1$d min</string>
     <string name="duration_hours">%1$dh</string>
