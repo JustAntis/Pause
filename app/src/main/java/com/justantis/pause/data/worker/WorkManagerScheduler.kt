@@ -10,7 +10,10 @@ import com.justantis.pause.domain.repository.BackgroundWorkScheduler
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.Clock
 import java.time.Duration
+import java.time.DayOfWeek
 import java.time.Instant
+import java.time.ZonedDateTime
+import java.time.temporal.TemporalAdjusters
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -39,7 +42,27 @@ class WorkManagerScheduler @Inject constructor(
         workManager.cancelUniqueWork(FocusSessionEndWorker.UNIQUE_NAME)
     }
 
+    override fun scheduleWeeklySummary() {
+        val now = ZonedDateTime.now(clock)
+        var firstRun = now.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY))
+            .withHour(SUMMARY_HOUR).withMinute(0).withSecond(0).withNano(0)
+        if (!firstRun.isAfter(now)) firstRun = firstRun.plusWeeks(1)
+        val request = PeriodicWorkRequestBuilder<WeeklySummaryWorker>(7, TimeUnit.DAYS)
+            .setInitialDelay(Duration.between(now, firstRun).toMillis(), TimeUnit.MILLISECONDS)
+            .build()
+        workManager.enqueueUniquePeriodicWork(WeeklySummaryWorker.UNIQUE_NAME, ExistingPeriodicWorkPolicy.KEEP, request)
+    }
+
+    override fun cancelWeeklySummary() {
+        workManager.cancelUniqueWork(WeeklySummaryWorker.UNIQUE_NAME)
+    }
+
+    override fun cancelAll() {
+        workManager.cancelAllWork()
+    }
+
     private companion object {
         const val SYNC_INTERVAL_MINUTES = 15L
+        const val SUMMARY_HOUR = 9
     }
 }

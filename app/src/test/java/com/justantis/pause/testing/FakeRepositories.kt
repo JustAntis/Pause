@@ -57,7 +57,7 @@ class FakeLimitRepository(initial: List<AppLimit> = emptyList()) : LimitReposito
     }
 }
 
-class FakeUsageRepository(var summary: UsageSummary = UsageSummary.EMPTY) : UsageRepository {
+open class FakeUsageRepository(var summary: UsageSummary = UsageSummary.EMPTY) : UsageRepository {
     val summaryByDate = mutableMapOf<LocalDate, UsageSummary>()
 
     override suspend fun usageOn(date: LocalDate): UsageSummary = summaryByDate[date] ?: summary
@@ -265,6 +265,24 @@ class FakeWorkScheduler : BackgroundWorkScheduler {
 
     override fun cancelFocusSessionEnd() {
         focusEndAt = null
+    }
+
+    var weeklySummaryScheduled = false
+    var cancelledAll = false
+
+    override fun scheduleWeeklySummary() {
+        weeklySummaryScheduled = true
+    }
+
+    override fun cancelWeeklySummary() {
+        weeklySummaryScheduled = false
+    }
+
+    override fun cancelAll() {
+        cancelledAll = true
+        usageSyncScheduled = false
+        focusEndAt = null
+        weeklySummaryScheduled = false
     }
 }
 
