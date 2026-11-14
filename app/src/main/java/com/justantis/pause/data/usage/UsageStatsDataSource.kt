@@ -15,7 +15,11 @@ class UsageStatsDataSource @Inject constructor(
     private val usageStatsManager: UsageStatsManager
 ) {
     fun queryEvents(startMs: Long, endMs: Long): List<UsageEvent> {
-        val events = usageStatsManager.queryEvents(startMs, endMs) ?: return emptyList()
+        val events = try {
+            usageStatsManager.queryEvents(startMs, endMs)
+        } catch (_: SecurityException) {
+            null
+        } ?: return emptyList()
         val result = mutableListOf<UsageEvent>()
         val event = UsageEvents.Event()
         while (events.hasNextEvent()) {
