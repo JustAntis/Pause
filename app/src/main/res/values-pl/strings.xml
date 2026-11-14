@@ -1,0 +1,53 @@
+<resources>
+    <!-- Durations -->
+    <string name="duration_minutes">%1$d min</string>
+    <string name="duration_hours">%1$d h</string>
+    <string name="duration_hours_minutes">%1$d h %2$d min</string>
+
+    <!-- Home -->
+    <string name="home_greeting_name">Cześć, %1$s!</string>
+    <string name="home_streak_content_description">Seria</string>
+    <plurals name="home_streak_days">
+        <item quantity="one">%1$d dzień!</item>
+        <item quantity="few">%1$d dni!</item>
+        <item quantity="many">%1$d dni!</item>
+        <item quantity="other">%1$d dnia!</item>
+    </plurals>
+    <string name="home_streak_caption">Świetnie Ci idzie!</string>
+    <string name="home_freezes_value">%1$d/%2$d</string>
+    <string name="home_freezes_label">zamrożenie</string>
+    <string name="home_screen_time_title">Czas przed ekranem</string>
+    <string name="home_screen_time_goal">Cel: %1$s</string>
+    <plurals name="home_unlocks">
+        <item quantity="one">%1$d odblokowanie</item>
+        <item quantity="few">%1$d odblokowania</item>
+        <item quantity="many">%1$d odblokowań</item>
+        <item quantity="other">%1$d odblokowania</item>
+    </plurals>
+    <string name="home_attempts_after_limits">%1$d po limitach</string>
+    <string name="home_todays_screen_time">Dzisiejszy czas przed ekranem</string>
+    <string name="home_app_usage_of_limit">%1$d/%2$d min</string>
+    <string name="home_start_session">Rozpocznij sesję</string>
+
+    <!-- Limits -->
+    <string name="limits_title">Limity</string>
+    <string name="limits_subtitle">Dzienne limity dla aplikacji</string>
+    <string name="limits_app_icon_content_description">Ikona aplikacji</string>
+    <plurals name="limits_used_times">
+        <item quantity="one">Użyto - %1$d raz</item>
+        <item quantity="few">Użyto - %1$d razy</item>
+        <item quantity="many">Użyto - %1$d razy</item>
+        <item quantity="other">Użyto - %1$d razy</item>
+    </plurals>
+    <string name="limits_add_limit">Dodaj limit</string>
+
+    <!-- Statistics -->
+    <string name="stats_title">Statystyki</string>
+    <string name="stats_period_day">Dzień</string>
+    <string name="stats_period_week">Tydzień</string>
+    <string name="stats_period_month">Miesiąc</string>
+    <string name="stats_chart_above_goal">Powyżej celu (%1$s)</string>
+    <string name="stats_unlocks_per_day">Odblokowania dziennie</string>
+    <string name="stats_limit_bypasses">Ominięte limity</string>
+    <string name="stats_most_used_apps">Najczęściej używane aplikacje</string>
+</resources>

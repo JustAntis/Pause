@@ -1,3 +1,49 @@
 <resources>
     <string name="app_name">Pause</string>
+
+    <!-- Durations -->
+    <string name="duration_minutes">%1$d min</string>
+    <string name="duration_hours">%1$dh</string>
+    <string name="duration_hours_minutes">%1$dh %2$dm</string>
+
+    <!-- Home -->
+    <string name="home_greeting_name">Hi %1$s!</string>
+    <string name="home_streak_content_description">Streak</string>
+    <plurals name="home_streak_days">
+        <item quantity="one">%1$d day!</item>
+        <item quantity="other">%1$d days!</item>
+    </plurals>
+    <string name="home_streak_caption">You\'re so good!</string>
+    <string name="home_freezes_value">%1$d/%2$d</string>
+    <string name="home_freezes_label">freeze</string>
+    <string name="home_screen_time_title">Screen time</string>
+    <string name="home_screen_time_goal">Goal: %1$s</string>
+    <plurals name="home_unlocks">
+        <item quantity="one">%1$d unlock</item>
+        <item quantity="other">%1$d unlocks</item>
+    </plurals>
+    <string name="home_attempts_after_limits">%1$d after limits</string>
+    <string name="home_todays_screen_time">Today\'s screen time</string>
+    <string name="home_app_usage_of_limit">%1$d/%2$d min</string>
+    <string name="home_start_session">Start session</string>
+
+    <!-- Limits -->
+    <string name="limits_title">Limits</string>
+    <string name="limits_subtitle">Day limits for applications</string>
+    <string name="limits_app_icon_content_description">Application icon</string>
+    <plurals name="limits_used_times">
+        <item quantity="one">Used - %1$d time</item>
+        <item quantity="other">Used - %1$d times</item>
+    </plurals>
+    <string name="limits_add_limit">Add limit</string>
+
+    <!-- Statistics -->
+    <string name="stats_title">Stats</string>
+    <string name="stats_period_day">Day</string>
+    <string name="stats_period_week">Week</string>
+    <string name="stats_period_month">Month</string>
+    <string name="stats_chart_above_goal">Above goal (%1$s)</string>
+    <string name="stats_unlocks_per_day">Unlocks per day</string>
+    <string name="stats_limit_bypasses">Bypassing limits</string>
+    <string name="stats_most_used_apps">Most used apps</string>
 </resources>

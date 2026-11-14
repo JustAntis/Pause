@@ -23,10 +23,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.justantis.pause.presentation.home.AppScreenTimeWithProgress
+import com.justantis.pause.R
+import com.justantis.pause.presentation.components.formatDuration
 import com.justantis.pause.presentation.theme.PauseTheme
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
@@ -48,7 +50,7 @@ fun StatsScreen(){
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Stats",
+            text = stringResource(R.string.stats_title),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold
         )
@@ -68,7 +70,7 @@ fun ChooseTimeLimit(){
                 onClick = {},
                 shape = SegmentedButtonDefaults.itemShape(index, StatsPeriod.entries.size)
             ) {
-                Text(period.name)
+                Text(stringResource(period.labelRes))
             }
         }
     }
@@ -96,7 +98,7 @@ fun ScreenTimeChart(modifier: Modifier = Modifier) {
                 modifier = Modifier.height(200.dp),
             )
             Text(
-                text = "Above goal (3h)",
+                text = stringResource(R.string.stats_chart_above_goal, formatDuration(180)),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -114,7 +116,7 @@ private fun AppUnlockedLocked(modifier: Modifier = Modifier){
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.displayMedium
                 )
-                Text(text = "Unlocks per day", style = MaterialTheme.typography.titleMedium)
+                Text(text = stringResource(R.string.stats_unlocks_per_day), style = MaterialTheme.typography.titleMedium)
             }
         }
 
@@ -125,7 +127,7 @@ private fun AppUnlockedLocked(modifier: Modifier = Modifier){
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.displayMedium
                 )
-                Text(text = "Bypassing limits", style = MaterialTheme.typography.titleMedium)
+                Text(text = stringResource(R.string.stats_limit_bypasses), style = MaterialTheme.typography.titleMedium)
             }
         }
     }
@@ -143,22 +145,22 @@ private fun AppsScreenTimeCard() {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(text = "Most used apps", style = MaterialTheme.typography.titleLarge)
-            AppScreenTime(appName = "Instagram", usedTime = "5h 12min")
-            AppScreenTime(appName = "Facebook", usedTime = "1h 45min")
-            AppScreenTime(appName = "Telegram", usedTime = "3h 28min")
+            Text(text = stringResource(R.string.stats_most_used_apps), style = MaterialTheme.typography.titleLarge)
+            AppScreenTime(appName = "Instagram", usedMinutes = 312)
+            AppScreenTime(appName = "Facebook", usedMinutes = 105)
+            AppScreenTime(appName = "Telegram", usedMinutes = 208)
         }
     }
 }
 
 @Composable
-private fun AppScreenTime(appName: String, usedTime: String) {
+private fun AppScreenTime(appName: String, usedMinutes: Int) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Row {
             Text(text = appName, style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = usedTime,
+                text = formatDuration(usedMinutes),
                 style = MaterialTheme.typography.bodyMedium,
             )
         }

@@ -20,10 +20,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.justantis.pause.presentation.stats.StatsScreen
+import com.justantis.pause.R
+import com.justantis.pause.presentation.components.formatDuration
 import com.justantis.pause.presentation.theme.PauseTheme
 
 @Composable
@@ -36,31 +39,31 @@ fun LimitsScreen(){
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Limits",
+            text = stringResource(R.string.limits_title),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "Day limits for applications",
+            text = stringResource(R.string.limits_subtitle),
             style = MaterialTheme.typography.bodyMedium
         )
-        AppLimitsCard(appName = "Instagram", usingCount = "4", usedTime = "45 min")
-        AppLimitsCard(appName = "Facebook", usingCount = "4", usedTime = "45 min")
-        AppLimitsCard(appName = "Telegram", usingCount = "4", usedTime = "45 min")
+        AppLimitsCard(appName = "Instagram", usingCount = 4, usedMinutes = 45)
+        AppLimitsCard(appName = "Facebook", usingCount = 4, usedMinutes = 45)
+        AppLimitsCard(appName = "Telegram", usingCount = 4, usedMinutes = 45)
         Button(
             onClick = {},
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp)
         ) {
-            Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add limit")
-            Text(text = "Add limit", style = MaterialTheme.typography.bodyMedium)
+            Icon(imageVector = Icons.Rounded.Add, contentDescription = null)
+            Text(text = stringResource(R.string.limits_add_limit), style = MaterialTheme.typography.bodyMedium)
         }
     }
 
 }
 
 @Composable
-fun AppLimitsCard(modifier: Modifier = Modifier, appName: String, usingCount: String, usedTime: String){
+fun AppLimitsCard(modifier: Modifier = Modifier, appName: String, usingCount: Int, usedMinutes: Int){
     Card(modifier = modifier.fillMaxWidth()) {
         Column() {
             Row(
@@ -69,14 +72,14 @@ fun AppLimitsCard(modifier: Modifier = Modifier, appName: String, usingCount: St
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Icon(imageVector = Icons.Rounded.Icecream, contentDescription = "Application Icon")
+                Icon(imageVector = Icons.Rounded.Icecream, contentDescription = stringResource(R.string.limits_app_icon_content_description))
                 Spacer(modifier = Modifier.width(12.dp))
                 Column() {
                     Text(text =  appName, style = MaterialTheme.typography.titleMedium)
-                    Text(text = "Used - $usingCount times", style = MaterialTheme.typography.bodySmall)
+                    Text(text = pluralStringResource(R.plurals.limits_used_times, usingCount, usingCount), style = MaterialTheme.typography.bodySmall)
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                Text(text = usedTime)
+                Text(text = formatDuration(usedMinutes))
             }
         }
     }
