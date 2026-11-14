@@ -10,6 +10,7 @@ Written while the app is being built; completed in phase 9. The structure follow
 | 1 | `domain/model/*`, `UsageEventAggregator`, `PauseDatabase` + DAOs (schema in `app/schemas`), `SettingsDataStore`, `UsageStatsDataSource`, `InstalledAppsDataSource`, repositories + Hilt modules |
 | 2 | Navigation (`Destinations`, `PauseNavHost`, `PauseBottomBar`, `MainViewModel`), Onboarding, Home on real data (`HomeStateMapper`), accessibility service declaration |
 | 3 | Limits list (`LimitsStateMapper`), Limit edit, `AppPickerSheet`, `AppIcon` |
+| 7 | `FocusConfig`, `StartFocusSessionUseCase`, `FinishExpiredFocusSessionUseCase`, `EndFocusSessionEarlyUseCase`, `FocusSessionEndWorker`, Focus Mode (`FocusViewModel`, `FocusScreen`), multi-select `AppPickerSheet`, remaining time on Home, `ForegroundAppResolver` |
 | 6 | `SyncUsageHistoryUseCase`, `UsageSyncWorker`, `WorkManagerScheduler`, `StatisticsRanges`, `StatisticsCalculator`, `GetStatisticsUseCase`, Statistics (`StatsStateMapper`, `StatsViewModel`), `UsageBarChart`, App details (`GetAppDetailsUseCase`, `AppDetailsStateMapper`, `AppDetailsViewModel`, `AppDetailsScreen`) |
 | 5 | `StreakCalculator`, `StreakConfig`, `DayTracking`, `CloseFinishedDaysUseCase`, `StreakRepository`, Profile (`ProfileStateMapper`, `ProfileViewModel`, `ProfileScreen`), debug-only `DemoDataSeeder` + `DebugToolsActivity` |
 | 4 | `FrictionConfig`, `FrictionPolicy`, `EnforcementController`, `PauseAccessibilityService`, `BlockActivity` + `BlockFlow` (`LimitReachedScreen`, `PauseScreen`, `PurposeScreen`), `BlockViewModel`, `BypassConsequence`, `GrantAccessUseCase` |
@@ -44,6 +45,11 @@ Written while the app is being built; completed in phase 9. The structure follow
 | D24 | Statistics averages | Week and Month: "Daily average", "unlocks per day" and the comparison chip use completed days with data only; today is used only when it is the only day with data. Today's bar stays on the chart. Day shows today. The chip is hidden when the previous period has no data. | Decided by the author: an unfinished today and days without data (before installation, future days) would pull the average down. |
 | D25 | Statistics apps | Launchable apps used at least one minute in the period, top 10. Default period when the screen opens: Week. | Same filter as Home (D8); Week is the most informative first view. |
 | D26 | Charts | Not scrollable or zoomable; the whole period is fitted to the width. | Vico scrolls by default, which hid most bars of Day and Month. |
+| D28 | Finishing a Focus session | At the planned end, by whichever comes first: a one-time WorkManager job, the next app start, or the open Focus screen; the end time is always the planned end. Not by the enforcement controller's timer. | §6.1 allows the controller one pending timer, used for the app in front; the three triggers already cover a killed process. |
+| D29 | Default paused apps | When no Focus apps are set, the idle screen preselects all apps with a limit; starting saves the selection. Turning off the last Focus app in App details brings the default back. | §7.7 "defaults to all apps that have a limit". |
+| D30 | Focus notifications | The ongoing countdown notification and "session finished" are phase 8. | §8 lists them with notifications. |
+| D31 | Break-screen minutes left | "Focus session in progress · N min left" rounds up (13:10 left → "14 min"). | Never shows "0 min" while time remains. |
+| D32 | Service start with an app open | When the accessibility service starts (app update, crash, turned on), the app already in front is taken from the last 30 minutes of usage events (`ForegroundAppResolver`). | No window event arrives for an app that is already open; found on the device after a process restart. |
 | D27 | App details "limit reached" | A day is highlighted when the current limit applied on that weekday and was reached. | Past limits are not stored (as D19). |
 
 ### Debug tools (debug builds only)
@@ -68,6 +74,7 @@ _Completed in phase 9._
 _Completed in phase 9._ Verified so far on a Samsung Galaxy S21 FE (SM-G990B2, Android API 36, no lock screen):
 
 - Phase 4 end to end: a 5-minute limit on Chrome showed the break screen 5 minutes after Chrome was opened; the pause (10 s), purpose and "Open for 1 min" returned to Chrome; when the minute expired the break screen came back with 2 attempts and a 30 s hint; "Close" went to the home screen.
+- Phase 7: a 15-minute Focus session on Chrome survived `kill -9` of the app process (the remaining time was 13:33 after 1 min 27 s); the system restarted the process and the accessibility service; opening Chrome showed the Focus break screen with a 30 s pause; after the bypass Focus Mode showed "With breaks"; ending early with confirmation stored CANCELLED. This test also found two defects, both fixed with regression tests: an extra unseen attempt recorded when a change arrived while the break screen was being shown, and no enforcement for an app already in front when the service starts.
 - Starting `BlockActivity` from the accessibility service was allowed on API 36 (`BAL_ALLOW_TOKEN` in the system log), so the `TYPE_ACCESSIBILITY_OVERLAY` fallback was not needed. **Not verified on API 37** (targetSdk); no API 37 device or emulator was available. Manual check: on an API 37 device, set a 5-minute limit, use the app for 5 minutes and confirm the break screen appears; `adb logcat | grep BlockActivity` must show `result code=0`.
 
 ## 5. Known limitations
