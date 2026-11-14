@@ -25,3 +25,6 @@ data object FocusDestination
 
 @Serializable
 data class AppDetailsDestination(val packageName: String)
+
+@Serializable
+data class LimitEditDestination(val packageName: String? = null)

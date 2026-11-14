@@ -28,6 +28,8 @@
     <string name="app_picker_empty">No apps found.</string>
     <string name="back">Back</string>
 
+    <string name="limit_edit_title">App limit</string>
+
     <!-- Onboarding -->
     <string name="onboarding_next">Next</string>
     <string name="onboarding_finish">Finish</string>
@@ -91,13 +93,21 @@
 
     <!-- Limits -->
     <string name="limits_title">Limits</string>
-    <string name="limits_subtitle">Day limits for applications</string>
-    <string name="limits_app_icon_content_description">Application icon</string>
-    <plurals name="limits_used_times">
-        <item quantity="one">Used - %1$d time</item>
-        <item quantity="other">Used - %1$d times</item>
-    </plurals>
+    <string name="limits_subtitle">Daily time limits for apps</string>
     <string name="limits_add_limit">Add limit</string>
+    <string name="limits_status_left">%1$s left</string>
+    <plurals name="limits_status_used_up">
+        <item quantity="one">Used up · %1$d attempt</item>
+        <item quantity="other">Used up · %1$d attempts</item>
+    </plurals>
+    <string name="limits_status_not_active_today">Not active today</string>
+    <string name="limits_status_with_days">%1$s · %2$s</string>
+    <string name="limits_days_weekdays">Weekdays only</string>
+    <string name="limits_days_weekends">Weekends only</string>
+    <string name="limits_days_custom">%1$s only</string>
+    <string name="limits_empty_title">No limits yet</string>
+    <string name="limits_empty_text">Set a daily time for an app. When it is used up, you will see a short break screen before opening the app.</string>
+    <string name="limits_info">When a limit is used up you will see a break screen. Access will still be possible.</string>
 
     <!-- Statistics -->
     <string name="stats_title">Stats</string>

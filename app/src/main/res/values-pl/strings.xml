@@ -26,6 +26,8 @@
     <string name="app_picker_empty">Nie znaleziono aplikacji.</string>
     <string name="back">Wstecz</string>
 
+    <string name="limit_edit_title">Limit aplikacji</string>
+
     <!-- Onboarding -->
     <string name="onboarding_next">Dalej</string>
     <string name="onboarding_finish">Zakończ</string>
@@ -94,15 +96,23 @@
 
     <!-- Limits -->
     <string name="limits_title">Limity</string>
-    <string name="limits_subtitle">Dzienne limity dla aplikacji</string>
-    <string name="limits_app_icon_content_description">Ikona aplikacji</string>
-    <plurals name="limits_used_times">
-        <item quantity="one">Użyto - %1$d raz</item>
-        <item quantity="few">Użyto - %1$d razy</item>
-        <item quantity="many">Użyto - %1$d razy</item>
-        <item quantity="other">Użyto - %1$d razy</item>
-    </plurals>
+    <string name="limits_subtitle">Dzienne limity czasu dla aplikacji</string>
     <string name="limits_add_limit">Dodaj limit</string>
+    <string name="limits_status_left">Zostało %1$s</string>
+    <plurals name="limits_status_used_up">
+        <item quantity="one">Wykorzystany · %1$d próba</item>
+        <item quantity="few">Wykorzystany · %1$d próby</item>
+        <item quantity="many">Wykorzystany · %1$d prób</item>
+        <item quantity="other">Wykorzystany · %1$d próby</item>
+    </plurals>
+    <string name="limits_status_not_active_today">Nieaktywny dzisiaj</string>
+    <string name="limits_status_with_days">%1$s · %2$s</string>
+    <string name="limits_days_weekdays">Tylko dni robocze</string>
+    <string name="limits_days_weekends">Tylko weekendy</string>
+    <string name="limits_days_custom">Tylko %1$s</string>
+    <string name="limits_empty_title">Brak limitów</string>
+    <string name="limits_empty_text">Ustaw dzienny czas dla aplikacji. Gdy się wyczerpie, przed otwarciem aplikacji zobaczysz krótki ekran przerwy.</string>
+    <string name="limits_info">Gdy limit się wyczerpie, zobaczysz ekran przerwy. Dostęp nadal będzie możliwy.</string>
 
     <!-- Statistics -->
     <string name="stats_title">Statystyki</string>
