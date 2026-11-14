@@ -24,7 +24,12 @@
         <item quantity="many">%1$d odblokowań</item>
         <item quantity="other">%1$d odblokowania</item>
     </plurals>
-    <string name="home_attempts_after_limits">%1$d po limitach</string>
+    <plurals name="home_attempts_after_limits">
+        <item quantity="one">%1$d po limitach</item>
+        <item quantity="few">%1$d po limitach</item>
+        <item quantity="many">%1$d po limitach</item>
+        <item quantity="other">%1$d po limitach</item>
+    </plurals>
     <string name="home_todays_screen_time">Dzisiejszy czas przed ekranem</string>
     <string name="home_app_usage_of_limit">%1$d/%2$d min</string>
     <string name="home_start_session">Rozpocznij sesję</string>

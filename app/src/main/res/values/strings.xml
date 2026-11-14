@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Pause</string>
+    <string name="app_name" translatable="false">Pause</string>
 
     <!-- Durations -->
     <string name="duration_minutes">%1$d min</string>
@@ -22,7 +22,10 @@
         <item quantity="one">%1$d unlock</item>
         <item quantity="other">%1$d unlocks</item>
     </plurals>
-    <string name="home_attempts_after_limits">%1$d after limits</string>
+    <plurals name="home_attempts_after_limits">
+        <item quantity="one">%1$d after limits</item>
+        <item quantity="other">%1$d after limits</item>
+    </plurals>
     <string name="home_todays_screen_time">Today\'s screen time</string>
     <string name="home_app_usage_of_limit">%1$d/%2$d min</string>
     <string name="home_start_session">Start session</string>

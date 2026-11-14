@@ -151,7 +151,7 @@ private fun ScreenTimeCard() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = pluralStringResource(R.plurals.home_unlocks, 46, 46), style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.weight(1f))
-                Text(text = stringResource(R.string.home_attempts_after_limits, 4), style = MaterialTheme.typography.bodyMedium)
+                Text(text = pluralStringResource(R.plurals.home_attempts_after_limits, 4, 4), style = MaterialTheme.typography.bodyMedium)
             }
         }
     }
