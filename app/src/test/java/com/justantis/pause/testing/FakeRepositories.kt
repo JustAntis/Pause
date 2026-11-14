@@ -8,10 +8,13 @@ import com.justantis.pause.domain.model.BlockOutcome
 import com.justantis.pause.domain.model.BlockReason
 import com.justantis.pause.domain.model.DailyAppUsage
 import com.justantis.pause.domain.model.DailySummary
+import com.justantis.pause.domain.model.FocusSession
+import com.justantis.pause.domain.model.FocusSessionStatus
 import com.justantis.pause.domain.model.InstalledApp
 import com.justantis.pause.domain.model.UsageSummary
 import com.justantis.pause.domain.repository.AppCatalogRepository
 import com.justantis.pause.domain.repository.BlockRepository
+import com.justantis.pause.domain.repository.FocusRepository
 import com.justantis.pause.domain.repository.LimitRepository
 import com.justantis.pause.domain.repository.UsageRepository
 import kotlinx.coroutines.flow.Flow
@@ -46,7 +49,9 @@ class FakeLimitRepository(initial: List<AppLimit> = emptyList()) : LimitReposito
 }
 
 class FakeUsageRepository(var summary: UsageSummary = UsageSummary.EMPTY) : UsageRepository {
-    override suspend fun usageOn(date: LocalDate): UsageSummary = summary
+    val summaryByDate = mutableMapOf<LocalDate, UsageSummary>()
+
+    override suspend fun usageOn(date: LocalDate): UsageSummary = summaryByDate[date] ?: summary
 
     override suspend fun syncDay(date: LocalDate) = Unit
 
@@ -122,4 +127,53 @@ class FakeBlockRepository(private val clock: Clock) : BlockRepository {
 
     override suspend fun getActiveGrant(packageName: String): AccessGrant? =
         grants[packageName]?.takeIf { it.isActiveAt(clock.instant()) }
+}
+
+class FakeFocusRepository(private val clock: Clock) : FocusRepository {
+    val focusApps = MutableStateFlow<Set<String>>(emptySet())
+    val sessions = MutableStateFlow<List<FocusSession>>(emptyList())
+
+    override fun observeFocusApps(): Flow<Set<String>> = focusApps
+
+    override suspend fun isFocusApp(packageName: String): Boolean = packageName in focusApps.value
+
+    override suspend fun setFocusApp(packageName: String, paused: Boolean) = focusApps.update {
+        if (paused) it + packageName else it - packageName
+    }
+
+    override suspend fun setFocusApps(packageNames: Set<String>) {
+        focusApps.value = packageNames
+    }
+
+    override suspend fun startSession(plannedMinutes: Int): FocusSession {
+        val session = FocusSession(
+            id = (sessions.value.maxOfOrNull { it.id } ?: 0L) + 1,
+            startedAt = clock.instant(),
+            plannedMinutes = plannedMinutes,
+            endedAt = null,
+            status = FocusSessionStatus.RUNNING
+        )
+        sessions.update { it + session }
+        return session
+    }
+
+    override suspend fun getRunningSession(): FocusSession? = sessions.value.lastOrNull { it.isRunning }
+
+    override fun observeRunningSession(): Flow<FocusSession?> = sessions.map { list -> list.lastOrNull { it.isRunning } }
+
+    override suspend fun markInterrupted(sessionId: Long) = sessions.update { list ->
+        list.map {
+            if (it.id == sessionId && it.status == FocusSessionStatus.RUNNING) {
+                it.copy(status = FocusSessionStatus.INTERRUPTED)
+            } else {
+                it
+            }
+        }
+    }
+
+    override suspend fun finishSession(sessionId: Long, status: FocusSessionStatus) = sessions.update { list ->
+        list.map { if (it.id == sessionId && it.isRunning) it.copy(endedAt = clock.instant(), status = status) else it }
+    }
+
+    override fun observeSessions(from: LocalDate, to: LocalDate): Flow<List<FocusSession>> = sessions
 }
