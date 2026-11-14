@@ -56,7 +56,8 @@ object LimitsStateMapper {
         )
     }
 
-    private fun describe(days: Set<DayOfWeek>): ActiveDays = when (days) {
+    /** "Every day", "Weekdays", "Weekends", the days left out, or the days themselves. */
+    fun describe(days: Set<DayOfWeek>): ActiveDays = when (days) {
         DayOfWeek.entries.toSet() -> ActiveDays.EveryDay
         WEEKDAYS -> ActiveDays.Weekdays
         WEEKENDS -> ActiveDays.Weekends

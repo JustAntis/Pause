@@ -41,7 +41,6 @@ import com.justantis.pause.presentation.components.AppIcon
 import com.justantis.pause.presentation.components.InfoBanner
 import com.justantis.pause.presentation.components.ObserveEffects
 import com.justantis.pause.presentation.components.dashedBorder
-import com.justantis.pause.presentation.components.dayName
 import com.justantis.pause.presentation.components.formatDuration
 import com.justantis.pause.presentation.theme.PauseTheme
 import java.time.DayOfWeek
@@ -198,14 +197,8 @@ private fun statusLine(item: LimitItem): String {
         is LimitStatus.UsedUp -> pluralStringResource(R.plurals.limits_status_used_up, status.attempts, status.attempts)
         LimitStatus.NotActiveToday -> stringResource(R.string.limits_status_not_active_today)
     }
-    val days = when (val days = item.activeDays) {
-        ActiveDays.EveryDay -> null
-        ActiveDays.Weekdays -> stringResource(R.string.limits_days_weekdays)
-        ActiveDays.Weekends -> stringResource(R.string.limits_days_weekends)
-        is ActiveDays.Custom -> stringResource(R.string.limits_days_custom, days.days.map { dayName(it) }.joinToString(", "))
-        is ActiveDays.Except -> stringResource(R.string.limits_days_except, days.days.map { dayName(it) }.joinToString(", "))
-    }
-    return if (days == null) status else stringResource(R.string.limits_status_with_days, days, status)
+    if (item.activeDays == ActiveDays.EveryDay) return status
+    return stringResource(R.string.limits_status_with_days, activeDaysText(item.activeDays), status)
 }
 
 @Preview(device = "spec:width=411dp,height=891dp", showSystemUi = true, showBackground = true)

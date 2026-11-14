@@ -123,6 +123,28 @@
     <string name="profile_goal_max">maks. %1$s</string>
     <string name="save">Zapisz</string>
 
+    <!-- App details -->
+    <string name="app_details_time_today">dzisiaj</string>
+    <string name="app_details_opens_today">otwarcia dzisiaj</string>
+    <string name="app_details_bypasses_today">ominięcia dzisiaj</string>
+    <string name="app_details_last_7_days">Ostatnie 7 dni</string>
+    <string name="app_details_caption">Wyróżniony: dzisiaj.</string>
+    <string name="app_details_caption_limit">Czerwony: limit wykorzystany. Wyróżniony: dzisiaj.</string>
+    <string name="app_details_daily_limit">Dzienny limit</string>
+    <string name="app_details_no_limit">Brak limitu</string>
+    <string name="app_details_edit_limit">Edytuj</string>
+    <string name="app_details_set_limit">Ustaw</string>
+    <string name="app_details_pause_in_focus">Pauza w trybie skupienia</string>
+    <string name="app_category_game">Gra</string>
+    <string name="app_category_audio">Muzyka i audio</string>
+    <string name="app_category_video">Wideo</string>
+    <string name="app_category_image">Zdjęcia i grafika</string>
+    <string name="app_category_social">Społecznościowe</string>
+    <string name="app_category_news">Wiadomości</string>
+    <string name="app_category_maps">Mapy</string>
+    <string name="app_category_productivity">Produktywność</string>
+    <string name="app_category_accessibility">Ułatwienia dostępu</string>
+
     <!-- Onboarding -->
     <string name="onboarding_next">Dalej</string>
     <string name="onboarding_finish">Zakończ</string>
@@ -202,6 +224,7 @@
     </plurals>
     <string name="limits_status_not_active_today">Nieaktywny dzisiaj</string>
     <string name="limits_status_with_days">%1$s · %2$s</string>
+    <string name="limits_days_every_day">codziennie</string>
     <string name="limits_days_weekdays">Tylko dni robocze</string>
     <string name="limits_days_weekends">Tylko weekendy</string>
     <string name="limits_days_custom">Tylko %1$s</string>

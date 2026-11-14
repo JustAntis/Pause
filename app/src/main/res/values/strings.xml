@@ -111,6 +111,28 @@
     <string name="profile_goal_max">max %1$s</string>
     <string name="save">Save</string>
 
+    <!-- App details -->
+    <string name="app_details_time_today">today</string>
+    <string name="app_details_opens_today">opens today</string>
+    <string name="app_details_bypasses_today">bypasses today</string>
+    <string name="app_details_last_7_days">Last 7 days</string>
+    <string name="app_details_caption">Highlighted: today.</string>
+    <string name="app_details_caption_limit">Red: limit reached. Highlighted: today.</string>
+    <string name="app_details_daily_limit">Daily limit</string>
+    <string name="app_details_no_limit">No limit</string>
+    <string name="app_details_edit_limit">Edit</string>
+    <string name="app_details_set_limit">Set</string>
+    <string name="app_details_pause_in_focus">Pause in Focus Mode</string>
+    <string name="app_category_game">Game</string>
+    <string name="app_category_audio">Music and audio</string>
+    <string name="app_category_video">Video</string>
+    <string name="app_category_image">Photos and images</string>
+    <string name="app_category_social">Social</string>
+    <string name="app_category_news">News</string>
+    <string name="app_category_maps">Maps</string>
+    <string name="app_category_productivity">Productivity</string>
+    <string name="app_category_accessibility">Accessibility</string>
+
     <!-- Onboarding -->
     <string name="onboarding_next">Next</string>
     <string name="onboarding_finish">Finish</string>
@@ -183,6 +205,7 @@
     </plurals>
     <string name="limits_status_not_active_today">Not active today</string>
     <string name="limits_status_with_days">%1$s · %2$s</string>
+    <string name="limits_days_every_day">every day</string>
     <string name="limits_days_weekdays">Weekdays only</string>
     <string name="limits_days_weekends">Weekends only</string>
     <string name="limits_days_custom">%1$s only</string>

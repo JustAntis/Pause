@@ -20,8 +20,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import androidx.navigation.toRoute
 import com.justantis.pause.R
+import com.justantis.pause.presentation.appdetails.AppDetailsRoute
 import com.justantis.pause.presentation.home.HomeRoute
 import com.justantis.pause.presentation.limitedit.LimitEditRoute
 import com.justantis.pause.presentation.limits.LimitsRoute
@@ -99,8 +99,11 @@ fun PauseNavHost(
                 composable<FocusDestination> {
                     PlaceholderScreen(title = stringResource(R.string.focus_title))
                 }
-                composable<AppDetailsDestination> { entry ->
-                    PlaceholderScreen(title = entry.toRoute<AppDetailsDestination>().packageName)
+                composable<AppDetailsDestination> {
+                    AppDetailsRoute(
+                        onClose = { navController.popBackStack() },
+                        onOpenLimitEdit = { navController.navigate(LimitEditDestination(it)) }
+                    )
                 }
             }
         }
