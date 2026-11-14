@@ -196,7 +196,14 @@
     <string name="stats_period_day">Day</string>
     <string name="stats_period_week">Week</string>
     <string name="stats_period_month">Month</string>
-    <string name="stats_chart_above_goal">Above goal (%1$s)</string>
+    <string name="stats_daily_average">Daily average</string>
+    <string name="stats_today">Today</string>
+    <string name="stats_change_up">+%1$d%% vs previous</string>
+    <string name="stats_change_down">−%1$d%% vs previous</string>
+    <string name="stats_change_none">0%% vs previous</string>
+    <string name="stats_caption_day">Screen time per hour today. The current hour is highlighted.</string>
+    <string name="stats_caption_days">Red: above your goal (%1$s). Highlighted: today.</string>
+    <string name="stats_no_apps">No app usage in this period.</string>
     <string name="stats_unlocks_per_day">Unlocks per day</string>
     <string name="stats_limit_bypasses">Bypassing limits</string>
     <string name="stats_most_used_apps">Most used apps</string>

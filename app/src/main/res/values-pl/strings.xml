@@ -215,7 +215,14 @@
     <string name="stats_period_day">Dzień</string>
     <string name="stats_period_week">Tydzień</string>
     <string name="stats_period_month">Miesiąc</string>
-    <string name="stats_chart_above_goal">Powyżej celu (%1$s)</string>
+    <string name="stats_daily_average">Średnio dziennie</string>
+    <string name="stats_today">Dzisiaj</string>
+    <string name="stats_change_up">+%1$d%% vs poprzedni okres</string>
+    <string name="stats_change_down">−%1$d%% vs poprzedni okres</string>
+    <string name="stats_change_none">0%% vs poprzedni okres</string>
+    <string name="stats_caption_day">Czas przed ekranem w każdej godzinie dzisiaj. Bieżąca godzina jest wyróżniona.</string>
+    <string name="stats_caption_days">Czerwony: powyżej celu (%1$s). Wyróżniony: dzisiaj.</string>
+    <string name="stats_no_apps">Brak użycia aplikacji w tym okresie.</string>
     <string name="stats_unlocks_per_day">Odblokowania dziennie</string>
     <string name="stats_limit_bypasses">Ominięte limity</string>
     <string name="stats_most_used_apps">Najczęściej używane aplikacje</string>

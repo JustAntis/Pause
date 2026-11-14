@@ -27,7 +27,7 @@ import com.justantis.pause.presentation.limitedit.LimitEditRoute
 import com.justantis.pause.presentation.limits.LimitsRoute
 import com.justantis.pause.presentation.onboarding.OnboardingRoute
 import com.justantis.pause.presentation.profile.ProfileRoute
-import com.justantis.pause.presentation.stats.StatsScreen
+import com.justantis.pause.presentation.stats.StatsRoute
 
 @Composable
 fun PauseAppContent(viewModel: MainViewModel = hiltViewModel()) {
@@ -81,7 +81,9 @@ fun PauseNavHost(
                         onOpenFocus = { navController.navigate(FocusDestination) }
                     )
                 }
-                composable<StatisticsDestination> { StatsScreen() }
+                composable<StatisticsDestination> {
+                    StatsRoute(onOpenAppDetails = { navController.navigate(AppDetailsDestination(it)) })
+                }
                 composable<LimitsDestination> {
                     LimitsRoute(onOpenLimitEdit = { navController.navigate(LimitEditDestination(it)) })
                 }
