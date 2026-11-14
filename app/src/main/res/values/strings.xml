@@ -114,6 +114,7 @@
     <string name="limits_days_weekdays">Weekdays only</string>
     <string name="limits_days_weekends">Weekends only</string>
     <string name="limits_days_custom">%1$s only</string>
+    <string name="limits_days_except">Except %1$s</string>
     <string name="limits_empty_title">No limits yet</string>
     <string name="limits_empty_text">Set a daily time for an app. When it is used up, you will see a short break screen before opening the app.</string>
     <string name="limits_info">When a limit is used up you will see a break screen. Access will still be possible.</string>

@@ -122,7 +122,7 @@ private fun EmptyLimits() {
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = stringResource(R.string.limits_empty_title),
+                text = stringResource(R.string.limits_empty_title),    
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -203,6 +203,7 @@ private fun statusLine(item: LimitItem): String {
         ActiveDays.Weekdays -> stringResource(R.string.limits_days_weekdays)
         ActiveDays.Weekends -> stringResource(R.string.limits_days_weekends)
         is ActiveDays.Custom -> stringResource(R.string.limits_days_custom, days.days.map { dayName(it) }.joinToString(", "))
+        is ActiveDays.Except -> stringResource(R.string.limits_days_except, days.days.map { dayName(it) }.joinToString(", "))
     }
     return if (days == null) status else stringResource(R.string.limits_status_with_days, days, status)
 }

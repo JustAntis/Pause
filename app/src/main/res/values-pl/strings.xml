@@ -119,6 +119,7 @@
     <string name="limits_days_weekdays">Tylko dni robocze</string>
     <string name="limits_days_weekends">Tylko weekendy</string>
     <string name="limits_days_custom">Tylko %1$s</string>
+    <string name="limits_days_except">Oprócz %1$s</string>
     <string name="limits_empty_title">Brak limitów</string>
     <string name="limits_empty_text">Ustaw dzienny czas dla aplikacji. Gdy się wyczerpie, przed otwarciem aplikacji zobaczysz krótki ekran przerwy.</string>
     <string name="limits_info">Gdy limit się wyczerpie, zobaczysz ekran przerwy. Dostęp nadal będzie możliwy.</string>

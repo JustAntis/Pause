@@ -76,7 +76,8 @@ class LimitsStateMapperTest {
                 limit("a", 30, everyDay, createdAt = 1),
                 limit("b", 30, weekdays, createdAt = 2),
                 limit("c", 30, setOf(SATURDAY, SUNDAY), createdAt = 3),
-                limit("d", 30, setOf(FRIDAY, MONDAY), createdAt = 4)
+                limit("d", 30, setOf(FRIDAY, MONDAY), createdAt = 4),
+                limit("e", 30, everyDay - SATURDAY, createdAt = 5)
             )
         ).items
 
@@ -84,6 +85,7 @@ class LimitsStateMapperTest {
         assertEquals(ActiveDays.Weekdays, items[1].activeDays)
         assertEquals(ActiveDays.Weekends, items[2].activeDays)
         assertEquals(ActiveDays.Custom(listOf(MONDAY, FRIDAY)), items[3].activeDays)
+        assertEquals(ActiveDays.Except(listOf(SATURDAY)), items[4].activeDays)
     }
 
     @Test

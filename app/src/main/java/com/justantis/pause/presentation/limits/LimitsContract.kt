@@ -7,6 +7,7 @@ sealed interface ActiveDays {
     data object Weekdays : ActiveDays
     data object Weekends : ActiveDays
     data class Custom(val days: List<DayOfWeek>) : ActiveDays
+    data class Except(val days: List<DayOfWeek>) : ActiveDays
 }
 
 sealed interface LimitStatus {

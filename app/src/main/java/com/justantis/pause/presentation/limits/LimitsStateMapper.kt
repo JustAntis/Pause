@@ -60,6 +60,10 @@ object LimitsStateMapper {
         DayOfWeek.entries.toSet() -> ActiveDays.EveryDay
         WEEKDAYS -> ActiveDays.Weekdays
         WEEKENDS -> ActiveDays.Weekends
-        else -> ActiveDays.Custom(days.sorted())
+        else -> if (days.size > DayOfWeek.entries.size / 2) {
+            ActiveDays.Except((DayOfWeek.entries - days).sorted())
+        } else {
+            ActiveDays.Custom(days.sorted())
+        }
     }
 }
