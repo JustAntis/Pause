@@ -10,6 +10,7 @@ Written while the app is being built; completed in phase 9. The structure follow
 | 1 | `domain/model/*`, `UsageEventAggregator`, `PauseDatabase` + DAOs (schema in `app/schemas`), `SettingsDataStore`, `UsageStatsDataSource`, `InstalledAppsDataSource`, repositories + Hilt modules |
 | 2 | Navigation (`Destinations`, `PauseNavHost`, `PauseBottomBar`, `MainViewModel`), Onboarding, Home on real data (`HomeStateMapper`), accessibility service declaration |
 | 3 | Limits list (`LimitsStateMapper`), Limit edit, `AppPickerSheet`, `AppIcon` |
+| 6 | `SyncUsageHistoryUseCase`, `UsageSyncWorker`, `WorkManagerScheduler`, `StatisticsRanges`, `StatisticsCalculator`, `GetStatisticsUseCase`, Statistics (`StatsStateMapper`, `StatsViewModel`), `UsageBarChart`, App details (`GetAppDetailsUseCase`, `AppDetailsStateMapper`, `AppDetailsViewModel`, `AppDetailsScreen`) |
 | 5 | `StreakCalculator`, `StreakConfig`, `DayTracking`, `CloseFinishedDaysUseCase`, `StreakRepository`, Profile (`ProfileStateMapper`, `ProfileViewModel`, `ProfileScreen`), debug-only `DemoDataSeeder` + `DebugToolsActivity` |
 | 4 | `FrictionConfig`, `FrictionPolicy`, `EnforcementController`, `PauseAccessibilityService`, `BlockActivity` + `BlockFlow` (`LimitReachedScreen`, `PauseScreen`, `PurposeScreen`), `BlockViewModel`, `BypassConsequence`, `GrantAccessUseCase` |
 
@@ -39,6 +40,11 @@ Written while the app is being built; completed in phase 9. The structure follow
 | D20 | Re-syncing old days | `syncDay` never replaces a stored day with an empty result. | The system deletes raw events after a few days; re-syncing would otherwise wipe history. |
 | D21 | Onboarding date | Stored when onboarding finishes; installs that finished onboarding before this existed get today. | Needed for "untracked before onboarding". |
 | D22 | Settings | The settings icon on Profile opens a placeholder until phase 8. | Settings is phase 8. |
+| D23 | Backfill | The first sync imports past days going back from the day before yesterday until a day has no system events, at most 30 days; a stored flag makes it run once. An empty result is never stored. | "As many past days as the system still has events for" (§5.1) without querying empty days every 15 minutes. |
+| D24 | Statistics averages | "Daily average" and "unlocks per day" average the days of the period that have data; today counts with its usage so far. The comparison chip is hidden when the previous period has no data. | Days before installation and future days would otherwise pull the average down. |
+| D25 | Statistics apps | Launchable apps used at least one minute in the period, top 10. Default period when the screen opens: Week. | Same filter as Home (D8); Week is the most informative first view. |
+| D26 | Charts | Not scrollable or zoomable; the whole period is fitted to the width. | Vico scrolls by default, which hid most bars of Day and Month. |
+| D27 | App details "limit reached" | A day is highlighted when the current limit applied on that weekday and was reached. | Past limits are not stored (as D19). |
 
 ### Debug tools (debug builds only)
 
