@@ -7,7 +7,6 @@
     <string name="nav_limits">Limity</string>
     <string name="nav_profile">Profil</string>
     <string name="focus_title">Tryb skupienia</string>
-    <string name="placeholder_not_ready">Ten ekran nie jest jeszcze gotowy.</string>
 
     <!-- Shared -->
     <string name="stepper_decrease">Zmniejsz</string>
@@ -196,6 +195,35 @@
     <string name="notification_summary_title">Twój tydzień</string>
     <string name="notification_summary_text">Dzienny czas przed ekranem: %1$s. Seria: %2$s.</string>
     <string name="notification_summary_text_change">Dzienny czas przed ekranem: %1$s (%2$s). Seria: %3$s.</string>
+
+    <!-- Settings -->
+    <string name="settings_break_screen">Ekran przerwy</string>
+    <string name="settings_pauses">Pauza przed dostępem</string>
+    <string name="settings_pauses_value">%1$s s</string>
+    <string name="settings_access_time">Czas dostępu</string>
+    <string name="settings_access_time_value">%1$s min</string>
+    <string name="settings_streak_freeze">Zamrożenie serii</string>
+    <plurals name="settings_streak_freeze_value">
+        <item quantity="one">co %1$d dzień, maks. %2$d</item>
+        <item quantity="few">co %1$d dni, maks. %2$d</item>
+        <item quantity="many">co %1$d dni, maks. %2$d</item>
+        <item quantity="other">co %1$d dnia, maks. %2$d</item>
+    </plurals>
+    <string name="settings_notifications">Powiadomienia</string>
+    <string name="settings_notify_before_limit">5 min przed końcem limitu</string>
+    <string name="settings_weekly_summary">Podsumowanie tygodnia</string>
+    <string name="settings_notifications_off">Powiadomienia dla Pause są wyłączone w ustawieniach systemu, więc żadne się nie pojawią.</string>
+    <string name="settings_permissions">Uprawnienia</string>
+    <string name="settings_on">Włączone</string>
+    <string name="settings_off">Wyłączone</string>
+    <string name="settings_name">Imię</string>
+    <string name="settings_name_not_set">Nie ustawiono</string>
+    <string name="settings_data">Dane</string>
+    <string name="settings_data_local">Dane są przechowywane tylko na tym urządzeniu.</string>
+    <string name="settings_delete_all">Usuń wszystkie dane</string>
+    <string name="settings_delete_title">Usunąć wszystkie dane?</string>
+    <string name="settings_delete_text">Limity, historia, seria, sesje skupienia i ustawienia zostaną usunięte z tego telefonu. Tego nie można cofnąć.</string>
+    <string name="settings_delete_confirm">Usuń</string>
 
     <!-- Onboarding -->
     <string name="onboarding_next">Dalej</string>

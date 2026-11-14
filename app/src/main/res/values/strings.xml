@@ -9,7 +9,6 @@
     <string name="nav_limits">Limits</string>
     <string name="nav_profile">Profile</string>
     <string name="focus_title">Focus Mode</string>
-    <string name="placeholder_not_ready">This screen is not ready yet.</string>
 
     <!-- Shared -->
     <string name="stepper_decrease">Decrease</string>
@@ -180,6 +179,33 @@
     <string name="notification_summary_title">Your week</string>
     <string name="notification_summary_text">Daily screen time: %1$s. Streak: %2$s.</string>
     <string name="notification_summary_text_change">Daily screen time: %1$s (%2$s). Streak: %3$s.</string>
+
+    <!-- Settings -->
+    <string name="settings_break_screen">Break screen</string>
+    <string name="settings_pauses">Pause before access</string>
+    <string name="settings_pauses_value">%1$s s</string>
+    <string name="settings_access_time">Access time</string>
+    <string name="settings_access_time_value">%1$s min</string>
+    <string name="settings_streak_freeze">Streak freeze</string>
+    <plurals name="settings_streak_freeze_value">
+        <item quantity="one">every %1$d day, max %2$d</item>
+        <item quantity="other">every %1$d days, max %2$d</item>
+    </plurals>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_notify_before_limit">5 min before a limit ends</string>
+    <string name="settings_weekly_summary">Weekly summary</string>
+    <string name="settings_notifications_off">Notifications are turned off for Pause in system settings, so none will be shown.</string>
+    <string name="settings_permissions">Permissions</string>
+    <string name="settings_on">On</string>
+    <string name="settings_off">Off</string>
+    <string name="settings_name">Name</string>
+    <string name="settings_name_not_set">Not set</string>
+    <string name="settings_data">Data</string>
+    <string name="settings_data_local">Data is stored only on this device.</string>
+    <string name="settings_delete_all">Delete all data</string>
+    <string name="settings_delete_title">Delete all data?</string>
+    <string name="settings_delete_text">Limits, history, streak, Focus Mode sessions and settings will be deleted from this phone. This cannot be undone.</string>
+    <string name="settings_delete_confirm">Delete</string>
 
     <!-- Onboarding -->
     <string name="onboarding_next">Next</string>

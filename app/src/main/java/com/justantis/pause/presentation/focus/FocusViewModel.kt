@@ -8,6 +8,7 @@ import com.justantis.pause.domain.model.FocusSessionStatus
 import com.justantis.pause.domain.usecase.EndFocusSessionEarlyUseCase
 import com.justantis.pause.domain.usecase.FinishExpiredFocusSessionUseCase
 import com.justantis.pause.domain.usecase.GetLaunchableAppsUseCase
+import com.justantis.pause.domain.usecase.GetPermissionStatusUseCase
 import com.justantis.pause.domain.usecase.ObserveFocusAppsUseCase
 import com.justantis.pause.domain.usecase.ObserveFocusSessionsUseCase
 import com.justantis.pause.domain.usecase.ObserveLimitsUseCase
@@ -40,7 +41,8 @@ import javax.inject.Inject
 /**
  * The countdown is always computed from the stored start and planned end of the running session,
  * never from an in-memory counter, so it is correct after the app process was killed. When the
- * planned end passes while the screen is open, the session is finished here.
+ * planned end passes while the screen is open, the session is finished here. Starting a session
+ * asks for the notification permission when it is missing, for the ongoing countdown notification.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -53,6 +55,7 @@ class FocusViewModel @Inject constructor(
     private val startFocusSession: StartFocusSessionUseCase,
     private val finishExpiredFocusSession: FinishExpiredFocusSessionUseCase,
     private val endFocusSessionEarly: EndFocusSessionEarlyUseCase,
+    private val getPermissionStatus: GetPermissionStatusUseCase,
     private val clock: Clock
 ) : ViewModel() {
 
@@ -156,7 +159,10 @@ class FocusViewModel @Inject constructor(
         val apps = ui.value.selection ?: current.pausedApps.map { it.packageName }.toSet()
         if (apps.isEmpty()) return
         ui.update { it.copy(selection = null, finishedSessionId = null) }
-        viewModelScope.launch { startFocusSession(minutes, apps) }
+        viewModelScope.launch {
+            startFocusSession(minutes, apps)
+            if (!getPermissionStatus().notifications) _effects.send(FocusEffect.RequestNotificationPermission)
+        }
     }
 
     private data class Data(

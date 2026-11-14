@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
@@ -21,7 +20,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.justantis.pause.R
 import com.justantis.pause.presentation.appdetails.AppDetailsRoute
 import com.justantis.pause.presentation.focus.FocusRoute
 import com.justantis.pause.presentation.home.HomeRoute
@@ -29,6 +27,7 @@ import com.justantis.pause.presentation.limitedit.LimitEditRoute
 import com.justantis.pause.presentation.limits.LimitsRoute
 import com.justantis.pause.presentation.onboarding.OnboardingRoute
 import com.justantis.pause.presentation.profile.ProfileRoute
+import com.justantis.pause.presentation.settings.SettingsRoute
 import com.justantis.pause.presentation.stats.StatsRoute
 
 @Composable
@@ -109,7 +108,14 @@ fun PauseNavHost(
                     ProfileRoute(onOpenSettings = { navController.navigate(SettingsDestination) })
                 }
                 composable<SettingsDestination> {
-                    PlaceholderScreen(title = stringResource(R.string.profile_settings))
+                    SettingsRoute(
+                        onClose = { navController.popBackStack() },
+                        onDataDeleted = {
+                            navController.navigate(OnboardingDestination) {
+                                popUpTo(navController.graph.id) { inclusive = true }
+                            }
+                        }
+                    )
                 }
                 composable<FocusDestination> {
                     FocusRoute(onClose = { navController.popBackStack() })

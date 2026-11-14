@@ -54,6 +54,7 @@ import com.justantis.pause.presentation.components.AppPickerSheet
 import com.justantis.pause.presentation.components.ObserveEffects
 import com.justantis.pause.presentation.components.PickerApp
 import com.justantis.pause.presentation.components.formatDuration
+import com.justantis.pause.presentation.components.rememberNotificationPermissionRequest
 import com.justantis.pause.presentation.theme.PauseTheme
 
 @Composable
@@ -62,10 +63,12 @@ fun FocusRoute(
     viewModel: FocusViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val requestNotificationPermission = rememberNotificationPermissionRequest()
 
     ObserveEffects(viewModel.effects) { effect ->
         when (effect) {
             FocusEffect.Close -> onClose()
+            FocusEffect.RequestNotificationPermission -> requestNotificationPermission()
         }
     }
 

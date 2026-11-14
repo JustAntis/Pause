@@ -6,6 +6,8 @@ import com.justantis.pause.domain.model.InstalledApp
 import com.justantis.pause.domain.usecase.EndFocusSessionEarlyUseCase
 import com.justantis.pause.domain.usecase.FinishExpiredFocusSessionUseCase
 import com.justantis.pause.domain.usecase.GetLaunchableAppsUseCase
+import com.justantis.pause.domain.usecase.GetPermissionStatusUseCase
+import com.justantis.pause.domain.model.PermissionStatus
 import com.justantis.pause.domain.usecase.ObserveFocusAppsUseCase
 import com.justantis.pause.domain.usecase.ObserveFocusSessionsUseCase
 import com.justantis.pause.domain.usecase.ObserveLimitsUseCase
@@ -15,6 +17,7 @@ import com.justantis.pause.testing.FakeAppCatalogRepository
 import com.justantis.pause.testing.FakeFocusRepository
 import com.justantis.pause.testing.FakeLimitRepository
 import com.justantis.pause.testing.FakeNotifier
+import com.justantis.pause.testing.FakePermissionRepository
 import com.justantis.pause.testing.FakeWorkScheduler
 import com.justantis.pause.testing.MainDispatcherRule
 import com.justantis.pause.testing.TestClock
@@ -45,6 +48,7 @@ class FocusViewModelTest {
         val focus = FakeFocusRepository(clock)
         val scheduler = FakeWorkScheduler()
         val notifier = FakeNotifier()
+        val permissions = FakePermissionRepository()
         val limits = FakeLimitRepository(
             limited.map { AppLimit(it, 30, DayOfWeek.entries.toSet(), enabled = true, createdAt = Instant.EPOCH) }
         )
@@ -65,6 +69,7 @@ class FocusViewModelTest {
             startFocusSession = StartFocusSessionUseCase(focus, scheduler, notifier),
             finishExpiredFocusSession = FinishExpiredFocusSessionUseCase(focus, scheduler, notifier, clock),
             endFocusSessionEarly = EndFocusSessionEarlyUseCase(focus, scheduler, notifier, clock),
+            getPermissionStatus = GetPermissionStatusUseCase(permissions),
             clock = clock
         )
     }
@@ -193,6 +198,21 @@ class FocusViewModelTest {
         viewModel.onIntent(FocusIntent.FinishedDismissed)
         runCurrent()
         assertEquals(FocusPhase.IDLE, viewModel.state.value.phase)
+    }
+
+    @Test
+    fun `starting a session asks for notifications when they are not allowed`() = runTest(mainDispatcherRule.dispatcher) {
+        val s = Setup(this)
+        s.permissions.status = PermissionStatus(usageAccess = true, accessibilityService = true, notifications = false)
+        val viewModel = started(s.viewModel())
+        val effects = mutableListOf<FocusEffect>()
+        backgroundScope.launch { viewModel.effects.collect { effects += it } }
+
+        viewModel.onIntent(FocusIntent.StartClicked)
+        runCurrent()
+
+        assertEquals(listOf(FocusEffect.RequestNotificationPermission), effects)
+        assertEquals(FocusPhase.RUNNING, viewModel.state.value.phase)
     }
 
     private companion object {

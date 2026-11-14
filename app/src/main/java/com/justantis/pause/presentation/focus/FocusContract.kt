@@ -53,4 +53,5 @@ sealed interface FocusIntent {
 
 sealed interface FocusEffect {
     data object Close : FocusEffect
+    data object RequestNotificationPermission : FocusEffect
 }
