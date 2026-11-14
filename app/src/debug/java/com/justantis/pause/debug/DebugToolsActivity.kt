@@ -25,13 +25,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.justantis.pause.R
+import com.justantis.pause.domain.usecase.SendWeeklySummaryUseCase
 import com.justantis.pause.presentation.theme.PauseTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * Debug builds only. Opened from the launcher shortcut "Seed demo history" (long-press the app
+ * Debug builds only: seeds demo history and posts the weekly summary at once (the real one waits for
+ * Monday morning). Opened from the launcher shortcut "Seed demo history" (long-press the app
  * icon) or with `adb shell am start -n com.justantis.pause/.debug.DebugToolsActivity`.
  */
 @AndroidEntryPoint
@@ -39,6 +41,9 @@ class DebugToolsActivity : ComponentActivity() {
 
     @Inject
     lateinit var seeder: DemoDataSeeder
+
+    @Inject
+    lateinit var sendWeeklySummary: SendWeeklySummaryUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -77,6 +82,13 @@ class DebugToolsActivity : ComponentActivity() {
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Text(text = stringResource(R.string.debug_seed_button))
+                        }
+                        Button(
+                            onClick = { scope.launch { sendWeeklySummary() } },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text(text = stringResource(R.string.debug_send_summary_button))
                         }
                         Text(text = status, style = MaterialTheme.typography.bodyMedium)
                     }

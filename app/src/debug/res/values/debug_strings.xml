@@ -5,5 +5,6 @@
     <string name="debug_shortcut_label" translatable="false">Seed demo history</string>
     <string name="debug_seed_explanation" translatable="false">Writes 35 closed past days: untracked days, clean days, one frozen and one broken day, app usage and break-screen attempts. Today is not changed. Running it again replaces the same days.</string>
     <string name="debug_seed_button" translatable="false">Seed 5 weeks of demo history</string>
+    <string name="debug_send_summary_button" translatable="false">Send weekly summary now</string>
     <string name="debug_seed_done" translatable="false">Done. Days written: %1$d</string>
 </resources>
