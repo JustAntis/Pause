@@ -9,6 +9,7 @@ import com.justantis.pause.domain.usecase.GetUsageOnDayUseCase
 import com.justantis.pause.domain.usecase.ObserveAttemptCountUseCase
 import com.justantis.pause.domain.usecase.ObserveLimitsUseCase
 import com.justantis.pause.domain.usecase.ObserveSettingsUseCase
+import com.justantis.pause.domain.usecase.ObserveRunningFocusSessionUseCase
 import com.justantis.pause.domain.usecase.ObserveStreakUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,11 +23,15 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.Clock
+import java.time.Duration
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import javax.inject.Inject
@@ -38,6 +43,7 @@ class HomeViewModel @Inject constructor(
     observeLimits: ObserveLimitsUseCase,
     private val observeAttemptCount: ObserveAttemptCountUseCase,
     private val observeStreak: ObserveStreakUseCase,
+    observeRunningFocusSession: ObserveRunningFocusSessionUseCase,
     private val getUsageOnDay: GetUsageOnDayUseCase,
     private val getPermissionStatus: GetPermissionStatusUseCase,
     private val getLaunchableApps: GetLaunchableAppsUseCase,
@@ -53,14 +59,34 @@ class HomeViewModel @Inject constructor(
         .map { it.date }
         .distinctUntilChanged()
 
-    val state: StateFlow<HomeState> = combine(
-        observeSettings(),
-        observeLimits(),
+    private val focusMinutesLeft: Flow<Int?> = observeRunningFocusSession().flatMapLatest { session ->
+        if (session == null) {
+            flowOf(null)
+        } else {
+            flow {
+                while (true) {
+                    val leftSeconds = Duration.between(clock.instant(), session.plannedEnd).seconds.coerceAtLeast(0)
+                    emit(((leftSeconds + 59) / 60).toInt())
+                    if (leftSeconds == 0L) break
+                    delay(FOCUS_TICK_MS)
+                }
+            }
+        }
+    }
+
+    private val todayData = combine(
         snapshot.filterNotNull(),
         today.flatMapLatest { observeAttemptCount(it) },
         today.flatMapLatest { observeStreak(it) }
-    ) { settings, limits, todaySnapshot, attempts, streak ->
-        HomeStateMapper.map(settings, limits, todaySnapshot, attempts, streak)
+    ) { todaySnapshot, attempts, streak -> Triple(todaySnapshot, attempts, streak) }
+
+    val state: StateFlow<HomeState> = combine(
+        observeSettings(),
+        observeLimits(),
+        todayData,
+        focusMinutesLeft
+    ) { settings, limits, (todaySnapshot, attempts, streak), focusLeft ->
+        HomeStateMapper.map(settings, limits, todaySnapshot, attempts, streak, focusLeft)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -100,5 +126,9 @@ class HomeViewModel @Inject constructor(
 
     private fun sendEffect(effect: HomeEffect) {
         viewModelScope.launch { _effects.send(effect) }
+    }
+
+    private companion object {
+        const val FOCUS_TICK_MS = 15_000L
     }
 }

@@ -133,6 +133,38 @@
     <string name="app_category_productivity">Productivity</string>
     <string name="app_category_accessibility">Accessibility</string>
 
+    <!-- Focus Mode -->
+    <string name="focus_clock" translatable="false">%1$02d:%2$02d</string>
+    <string name="focus_ring_idle">minutes of focus</string>
+    <string name="focus_ring_running">left</string>
+    <string name="focus_ring_finished">done</string>
+    <string name="focus_paused_apps">Paused apps</string>
+    <string name="focus_change_apps">Change</string>
+    <string name="focus_no_apps">No apps selected. Choose at least one app to pause.</string>
+    <string name="focus_more_apps" translatable="false">+%1$d</string>
+    <string name="focus_today_summary">Today · %1$s · %2$s</string>
+    <plurals name="focus_today_clean">
+        <item quantity="one">%1$d clean</item>
+        <item quantity="other">%1$d clean</item>
+    </plurals>
+    <plurals name="focus_today_with_breaks">
+        <item quantity="one">%1$d with a break</item>
+        <item quantity="other">%1$d with breaks</item>
+    </plurals>
+    <string name="focus_status_clean">Clean so far</string>
+    <string name="focus_status_with_breaks">With breaks</string>
+    <string name="focus_end_session">End session</string>
+    <string name="focus_end_title">End the session early?</string>
+    <string name="focus_end_text">It will not count as a clean session or as a session with breaks.</string>
+    <string name="focus_end_confirm">End session</string>
+    <string name="focus_end_keep_going">Keep going</string>
+    <string name="focus_result_clean">Clean session. Well done!</string>
+    <string name="focus_result_with_breaks">Session finished with breaks</string>
+    <string name="focus_done">Done</string>
+    <string name="home_focus_running">Focus · %1$s left</string>
+    <string name="app_picker_title_multiple">Choose apps</string>
+    <string name="app_picker_done">Done</string>
+
     <!-- Onboarding -->
     <string name="onboarding_next">Next</string>
     <string name="onboarding_finish">Finish</string>

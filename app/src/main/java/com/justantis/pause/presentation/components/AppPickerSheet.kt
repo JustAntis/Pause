@@ -10,18 +10,22 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.justantis.pause.R
@@ -29,7 +33,8 @@ import com.justantis.pause.R
 data class PickerApp(val packageName: String, val label: String)
 
 /**
- * A searchable list of apps in a bottom sheet. Tapping an app picks it.
+ * A searchable list of apps in a bottom sheet. Tapping an app picks it. With [selectedPackages]
+ * the sheet allows several apps: rows show a checkbox, tapping toggles and [onDone] confirms.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,18 +43,28 @@ fun AppPickerSheet(
     query: String,
     onQueryChange: (String) -> Unit,
     onAppPicked: (String) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    selectedPackages: Set<String>? = null,
+    onDone: () -> Unit = {}
 ) {
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(
             modifier = Modifier.padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = stringResource(R.string.app_picker_title),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = stringResource(
+                        if (selectedPackages == null) R.string.app_picker_title else R.string.app_picker_title_multiple
+                    ),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+                if (selectedPackages != null) {
+                    TextButton(onClick = onDone) { Text(text = stringResource(R.string.app_picker_done)) }
+                }
+            }
             OutlinedTextField(
                 value = query,
                 onValueChange = onQueryChange,
@@ -68,16 +83,23 @@ fun AppPickerSheet(
             }
             LazyColumn(contentPadding = PaddingValues(bottom = 24.dp)) {
                 items(apps, key = { it.packageName }) { app ->
+                    val selected = selectedPackages?.contains(app.packageName)
+                    val rowModifier = if (selected == null) {
+                        Modifier.clickable { onAppPicked(app.packageName) }
+                    } else {
+                        Modifier.toggleable(value = selected, role = Role.Checkbox) { onAppPicked(app.packageName) }
+                    }
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .heightIn(min = 56.dp)
-                            .clickable { onAppPicked(app.packageName) },
+                            .then(rowModifier),
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         AppIcon(packageName = app.packageName)
-                        Text(text = app.label, style = MaterialTheme.typography.bodyLarge)
+                        Text(text = app.label, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+                        if (selected != null) Checkbox(checked = selected, onCheckedChange = null)
                     }
                 }
             }

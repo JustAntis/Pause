@@ -43,14 +43,22 @@ class HomeStateMapperTest {
         hour: Int = 10,
         permissions: PermissionStatus = allGranted,
         attempts: Int = 0,
-        streak: StreakState = StreakState.EMPTY
+        streak: StreakState = StreakState.EMPTY,
+        focusMinutesLeft: Int? = null
     ) = HomeStateMapper.map(
         settings = settings,
         limits = limits,
         snapshot = TodaySnapshot(saturday, hour, usage, labels, permissions),
         attemptsToday = attempts,
-        streak = streak
+        streak = streak,
+        focusMinutesLeft = focusMinutesLeft
     )
+
+    @Test
+    fun `running focus session shows its minutes left`() {
+        assertEquals(18, map(usage(), focusMinutesLeft = 18).focusMinutesLeft)
+        assertEquals(null, map(usage()).focusMinutesLeft)
+    }
 
     @Test
     fun `streak and freezes come from the streak state`() {

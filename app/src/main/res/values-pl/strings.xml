@@ -145,6 +145,40 @@
     <string name="app_category_productivity">Produktywność</string>
     <string name="app_category_accessibility">Ułatwienia dostępu</string>
 
+    <!-- Focus Mode -->
+    <string name="focus_ring_idle">minut skupienia</string>
+    <string name="focus_ring_running">zostało</string>
+    <string name="focus_ring_finished">gotowe</string>
+    <string name="focus_paused_apps">Wstrzymane aplikacje</string>
+    <string name="focus_change_apps">Zmień</string>
+    <string name="focus_no_apps">Nie wybrano aplikacji. Wybierz co najmniej jedną aplikację do wstrzymania.</string>
+    <string name="focus_today_summary">Dzisiaj · %1$s · %2$s</string>
+    <plurals name="focus_today_clean">
+        <item quantity="one">%1$d czysta</item>
+        <item quantity="few">%1$d czyste</item>
+        <item quantity="many">%1$d czystych</item>
+        <item quantity="other">%1$d czystej</item>
+    </plurals>
+    <plurals name="focus_today_with_breaks">
+        <item quantity="one">%1$d z przerwami</item>
+        <item quantity="few">%1$d z przerwami</item>
+        <item quantity="many">%1$d z przerwami</item>
+        <item quantity="other">%1$d z przerwami</item>
+    </plurals>
+    <string name="focus_status_clean">Na razie bez przerw</string>
+    <string name="focus_status_with_breaks">Z przerwami</string>
+    <string name="focus_end_session">Zakończ sesję</string>
+    <string name="focus_end_title">Zakończyć sesję wcześniej?</string>
+    <string name="focus_end_text">Nie będzie liczona ani jako czysta, ani jako sesja z przerwami.</string>
+    <string name="focus_end_confirm">Zakończ sesję</string>
+    <string name="focus_end_keep_going">Kontynuuj</string>
+    <string name="focus_result_clean">Czysta sesja. Brawo!</string>
+    <string name="focus_result_with_breaks">Sesja zakończona z przerwami</string>
+    <string name="focus_done">Gotowe</string>
+    <string name="home_focus_running">Skupienie · zostało %1$s</string>
+    <string name="app_picker_title_multiple">Wybierz aplikacje</string>
+    <string name="app_picker_done">Gotowe</string>
+
     <!-- Onboarding -->
     <string name="onboarding_next">Dalej</string>
     <string name="onboarding_finish">Zakończ</string>

@@ -142,7 +142,10 @@ fun HomeScreen(
                 modifier = Modifier.size(ButtonDefaults.IconSize)
             )
             Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
-            Text(text = stringResource(R.string.home_start_session))
+            Text(
+                text = state.focusMinutesLeft?.let { stringResource(R.string.home_focus_running, formatDuration(it)) }
+                    ?: stringResource(R.string.home_start_session)
+            )
         }
     }
 }

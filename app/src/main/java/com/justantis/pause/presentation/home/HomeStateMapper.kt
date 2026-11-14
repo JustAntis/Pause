@@ -28,7 +28,8 @@ object HomeStateMapper {
         limits: List<AppLimit>,
         snapshot: TodaySnapshot,
         attemptsToday: Int,
-        streak: StreakState
+        streak: StreakState,
+        focusMinutesLeft: Int?
     ) = HomeState(
         date = snapshot.date,
         isLoading = false,
@@ -43,7 +44,8 @@ object HomeStateMapper {
         attemptsToday = attemptsToday,
         topApps = topApps(snapshot, limits),
         usageAccessMissing = !snapshot.permissions.usageAccess,
-        accessibilityMissing = !snapshot.permissions.accessibilityService
+        accessibilityMissing = !snapshot.permissions.accessibilityService,
+        focusMinutesLeft = focusMinutesLeft
     )
 
     private fun timeOfDay(hour: Int): TimeOfDay = when (hour) {

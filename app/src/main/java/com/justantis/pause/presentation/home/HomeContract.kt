@@ -30,7 +30,8 @@ data class HomeState(
     val attemptsToday: Int = 0,
     val topApps: List<HomeAppItem> = emptyList(),
     val usageAccessMissing: Boolean = false,
-    val accessibilityMissing: Boolean = false
+    val accessibilityMissing: Boolean = false,
+    val focusMinutesLeft: Int? = null
 ) {
     val screenTimeProgress: Float
         get() = if (screenTimeGoalMinutes > 0) {

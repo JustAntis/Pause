@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.justantis.pause.R
 import com.justantis.pause.presentation.appdetails.AppDetailsRoute
+import com.justantis.pause.presentation.focus.FocusRoute
 import com.justantis.pause.presentation.home.HomeRoute
 import com.justantis.pause.presentation.limitedit.LimitEditRoute
 import com.justantis.pause.presentation.limits.LimitsRoute
@@ -97,7 +98,7 @@ fun PauseNavHost(
                     PlaceholderScreen(title = stringResource(R.string.profile_settings))
                 }
                 composable<FocusDestination> {
-                    PlaceholderScreen(title = stringResource(R.string.focus_title))
+                    FocusRoute(onClose = { navController.popBackStack() })
                 }
                 composable<AppDetailsDestination> {
                     AppDetailsRoute(
