@@ -22,7 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.justantis.pause.R
-import com.justantis.pause.presentation.home.HomeScreen
+import com.justantis.pause.presentation.home.HomeRoute
 import com.justantis.pause.presentation.limits.LimitsScreen
 import com.justantis.pause.presentation.onboarding.OnboardingRoute
 import com.justantis.pause.presentation.stats.StatsScreen
@@ -73,7 +73,12 @@ fun PauseNavHost(
                 )
             }
             navigation<MainGraph>(startDestination = HomeDestination) {
-                composable<HomeDestination> { HomeScreen() }
+                composable<HomeDestination> {
+                    HomeRoute(
+                        onOpenAppDetails = { navController.navigate(AppDetailsDestination(it)) },
+                        onOpenFocus = { navController.navigate(FocusDestination) }
+                    )
+                }
                 composable<StatisticsDestination> { StatsScreen() }
                 composable<LimitsDestination> { LimitsScreen() }
                 composable<ProfileDestination> {

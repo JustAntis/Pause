@@ -48,12 +48,21 @@
 
     <!-- Home -->
     <string name="home_greeting_name">Hi %1$s!</string>
+    <string name="home_greeting_morning">Good morning!</string>
+    <string name="home_greeting_afternoon">Good afternoon!</string>
+    <string name="home_greeting_evening">Good evening!</string>
+    <string name="home_usage_access_off_title">Usage access is off</string>
+    <string name="home_usage_access_off_text">Screen time and unlocks cannot be counted until it is switched back on.</string>
+    <string name="home_accessibility_off_title">Accessibility service is off</string>
+    <string name="home_accessibility_off_text">The break screen cannot appear when a limit is used up until it is switched back on.</string>
+    <string name="home_open_settings">Open settings</string>
     <string name="home_streak_content_description">Streak</string>
     <plurals name="home_streak_days">
         <item quantity="one">%1$d day!</item>
         <item quantity="other">%1$d days!</item>
     </plurals>
     <string name="home_streak_caption">You\'re so good!</string>
+    <string name="home_streak_caption_start">A clean day starts your streak.</string>
     <string name="home_freezes_value">%1$d/%2$d</string>
     <string name="home_freezes_label">freeze</string>
     <string name="home_screen_time_title">Screen time</string>
@@ -68,6 +77,8 @@
     </plurals>
     <string name="home_todays_screen_time">Today\'s screen time</string>
     <string name="home_app_usage_of_limit">%1$d/%2$d min</string>
+    <string name="home_app_usage_no_limit">%1$s · no limit</string>
+    <string name="home_no_usage_yet">No screen time recorded yet today.</string>
     <string name="home_start_session">Start session</string>
 
     <!-- Limits -->

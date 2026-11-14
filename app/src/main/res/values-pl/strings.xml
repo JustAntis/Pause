@@ -46,6 +46,14 @@
 
     <!-- Home -->
     <string name="home_greeting_name">Cześć, %1$s!</string>
+    <string name="home_greeting_morning">Dzień dobry!</string>
+    <string name="home_greeting_afternoon">Dzień dobry!</string>
+    <string name="home_greeting_evening">Dobry wieczór!</string>
+    <string name="home_usage_access_off_title">Dostęp do danych o użyciu jest wyłączony</string>
+    <string name="home_usage_access_off_text">Czasu przed ekranem i odblokowań nie da się liczyć, dopóki go nie włączysz.</string>
+    <string name="home_accessibility_off_title">Usługa ułatwień dostępu jest wyłączona</string>
+    <string name="home_accessibility_off_text">Ekran przerwy nie pojawi się po wyczerpaniu limitu, dopóki jej nie włączysz.</string>
+    <string name="home_open_settings">Otwórz ustawienia</string>
     <string name="home_streak_content_description">Seria</string>
     <plurals name="home_streak_days">
         <item quantity="one">%1$d dzień!</item>
@@ -54,6 +62,7 @@
         <item quantity="other">%1$d dnia!</item>
     </plurals>
     <string name="home_streak_caption">Świetnie Ci idzie!</string>
+    <string name="home_streak_caption_start">Czysty dzień rozpoczyna serię.</string>
     <string name="home_freezes_value">%1$d/%2$d</string>
     <string name="home_freezes_label">zamrożenie</string>
     <string name="home_screen_time_title">Czas przed ekranem</string>
@@ -72,6 +81,8 @@
     </plurals>
     <string name="home_todays_screen_time">Dzisiejszy czas przed ekranem</string>
     <string name="home_app_usage_of_limit">%1$d/%2$d min</string>
+    <string name="home_app_usage_no_limit">%1$s · bez limitu</string>
+    <string name="home_no_usage_yet">Dziś nie zarejestrowano jeszcze czasu przed ekranem.</string>
     <string name="home_start_session">Rozpocznij sesję</string>
 
     <!-- Limits -->
