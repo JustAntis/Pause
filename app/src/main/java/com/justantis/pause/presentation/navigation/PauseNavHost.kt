@@ -23,6 +23,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.justantis.pause.R
 import com.justantis.pause.presentation.home.HomeRoute
+import com.justantis.pause.presentation.limitedit.LimitEditRoute
 import com.justantis.pause.presentation.limits.LimitsRoute
 import com.justantis.pause.presentation.onboarding.OnboardingRoute
 import com.justantis.pause.presentation.stats.StatsScreen
@@ -84,7 +85,7 @@ fun PauseNavHost(
                     LimitsRoute(onOpenLimitEdit = { navController.navigate(LimitEditDestination(it)) })
                 }
                 composable<LimitEditDestination> {
-                    PlaceholderScreen(title = stringResource(R.string.limit_edit_title))
+                    LimitEditRoute(onClose = { navController.popBackStack() })
                 }
                 composable<ProfileDestination> {
                     PlaceholderScreen(title = stringResource(R.string.nav_profile))

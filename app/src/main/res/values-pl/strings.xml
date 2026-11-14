@@ -27,6 +27,15 @@
     <string name="back">Wstecz</string>
 
     <string name="limit_edit_title">Limit aplikacji</string>
+    <string name="limit_edit_choose_app">Wybierz aplikację</string>
+    <string name="limit_edit_time_per_day">Czas dziennie</string>
+    <string name="limit_edit_active_days">Aktywne dni</string>
+    <string name="limit_edit_save">Zapisz limit</string>
+    <string name="limit_edit_delete">Usuń limit</string>
+    <string name="limit_edit_delete_title">Usunąć ten limit?</string>
+    <string name="limit_edit_delete_text">%1$s nie będzie już mieć dziennego limitu. Historia zostaje w statystykach.</string>
+    <string name="limit_edit_delete_confirm">Usuń</string>
+    <string name="cancel">Anuluj</string>
 
     <!-- Onboarding -->
     <string name="onboarding_next">Dalej</string>

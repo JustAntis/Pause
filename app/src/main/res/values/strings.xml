@@ -29,6 +29,15 @@
     <string name="back">Back</string>
 
     <string name="limit_edit_title">App limit</string>
+    <string name="limit_edit_choose_app">Choose an app</string>
+    <string name="limit_edit_time_per_day">Time per day</string>
+    <string name="limit_edit_active_days">Active days</string>
+    <string name="limit_edit_save">Save limit</string>
+    <string name="limit_edit_delete">Delete limit</string>
+    <string name="limit_edit_delete_title">Delete this limit?</string>
+    <string name="limit_edit_delete_text">%1$s will no longer have a daily limit. Its history stays in your statistics.</string>
+    <string name="limit_edit_delete_confirm">Delete</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Onboarding -->
     <string name="onboarding_next">Next</string>
