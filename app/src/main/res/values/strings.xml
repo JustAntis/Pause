@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Pause</string>
 
     <string name="accessibility_service_description">Pause uses this service only to notice which app you open, so it can show a break screen when that app\'s daily limit is used up or a Focus session is running. It does not read, collect or send anything you see or type on the screen. All data stays on this phone.</string>
@@ -38,6 +38,52 @@
     <string name="limit_edit_delete_text">%1$s will no longer have a daily limit. Its history stays in your statistics.</string>
     <string name="limit_edit_delete_confirm">Delete</string>
     <string name="cancel">Cancel</string>
+
+    <!-- Break screen -->
+    <string name="block_used_of_limit">%1$d of %2$d min</string>
+    <string name="block_focus_in_progress">Focus session in progress · %1$s left</string>
+    <plurals name="block_attempts_today">
+        <item quantity="one">attempt today</item>
+        <item quantity="other">attempts today</item>
+    </plurals>
+    <plurals name="block_streak_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <string name="block_streak_label">current streak</string>
+    <string name="block_freezes_value">%1$d of %2$d</string>
+    <string name="block_freezes_label">streak freezes</string>
+    <string name="block_next_pause_hint">The next access will be preceded by a %1$d s pause</string>
+    <string name="block_close">Close</string>
+    <string name="block_need_access">I need access</string>
+    <string name="block_access_first">First access today</string>
+    <string name="block_access_second">Second access today</string>
+    <string name="block_access_third">Third access today</string>
+    <string name="block_access_nth" tools:ignore="PluralsCandidate">Access no. %1$d today</string>
+    <string name="block_breathe_title">Take a calm breath</string>
+    <string name="block_breathe_text">Breathe in… and out</string>
+    <plurals name="block_seconds_left">
+        <item quantity="one">%1$d second left</item>
+        <item quantity="other">%1$d seconds left</item>
+    </plurals>
+    <string name="block_next">Next</string>
+    <string name="block_next_in">Next – available in %1$d s</string>
+    <string name="block_purpose_title">Why are you opening this app?</string>
+    <string name="block_purpose_reply">Reply to a message</string>
+    <string name="block_purpose_check">Check something specific</string>
+    <string name="block_purpose_work">Work or study</string>
+    <string name="block_purpose_other">Other</string>
+    <string name="block_duration_title">For how long?</string>
+    <string name="block_open_for">Open for %1$s</string>
+    <string name="block_open">Open</string>
+    <plurals name="block_consequence_freeze">
+        <item quantity="one">This access will use 1 streak freeze. Your %1$d-day streak is kept.</item>
+        <item quantity="other">This access will use 1 streak freeze. Your %1$d-day streak is kept.</item>
+    </plurals>
+    <plurals name="block_consequence_break">
+        <item quantity="one">This access will break your %1$d-day streak.</item>
+        <item quantity="other">This access will break your %1$d-day streak.</item>
+    </plurals>
 
     <!-- Onboarding -->
     <string name="onboarding_next">Next</string>

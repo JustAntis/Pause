@@ -37,6 +37,62 @@
     <string name="limit_edit_delete_confirm">Usuń</string>
     <string name="cancel">Anuluj</string>
 
+    <!-- Break screen -->
+    <string name="block_used_of_limit">%1$d z %2$d min</string>
+    <string name="block_focus_in_progress">Trwa sesja skupienia · zostało %1$s</string>
+    <plurals name="block_attempts_today">
+        <item quantity="one">próba dzisiaj</item>
+        <item quantity="few">próby dzisiaj</item>
+        <item quantity="many">prób dzisiaj</item>
+        <item quantity="other">próby dzisiaj</item>
+    </plurals>
+    <plurals name="block_streak_days">
+        <item quantity="one">%1$d dzień</item>
+        <item quantity="few">%1$d dni</item>
+        <item quantity="many">%1$d dni</item>
+        <item quantity="other">%1$d dnia</item>
+    </plurals>
+    <string name="block_streak_label">obecna seria</string>
+    <string name="block_freezes_value">%1$d z %2$d</string>
+    <string name="block_freezes_label">zamrożenia serii</string>
+    <string name="block_next_pause_hint">Następny dostęp poprzedzi pauza %1$d s</string>
+    <string name="block_close">Zamknij</string>
+    <string name="block_need_access">Potrzebuję dostępu</string>
+    <string name="block_access_first">Pierwszy dostęp dzisiaj</string>
+    <string name="block_access_second">Drugi dostęp dzisiaj</string>
+    <string name="block_access_third">Trzeci dostęp dzisiaj</string>
+    <string name="block_access_nth">Dostęp nr %1$d dzisiaj</string>
+    <string name="block_breathe_title">Weź spokojny oddech</string>
+    <string name="block_breathe_text">Wdech… i wydech</string>
+    <plurals name="block_seconds_left">
+        <item quantity="one">Została %1$d sekunda</item>
+        <item quantity="few">Zostały %1$d sekundy</item>
+        <item quantity="many">Zostało %1$d sekund</item>
+        <item quantity="other">Zostało %1$d sekundy</item>
+    </plurals>
+    <string name="block_next">Dalej</string>
+    <string name="block_next_in">Dalej – dostępne za %1$d s</string>
+    <string name="block_purpose_title">Dlaczego otwierasz tę aplikację?</string>
+    <string name="block_purpose_reply">Odpowiedź na wiadomość</string>
+    <string name="block_purpose_check">Sprawdzenie czegoś konkretnego</string>
+    <string name="block_purpose_work">Praca lub nauka</string>
+    <string name="block_purpose_other">Inny powód</string>
+    <string name="block_duration_title">Na jak długo?</string>
+    <string name="block_open_for">Otwórz na %1$s</string>
+    <string name="block_open">Otwórz</string>
+    <plurals name="block_consequence_freeze">
+        <item quantity="one">Ten dostęp zużyje 1 zamrożenie serii. Twoja seria (%1$d dzień) zostanie zachowana.</item>
+        <item quantity="few">Ten dostęp zużyje 1 zamrożenie serii. Twoja seria (%1$d dni) zostanie zachowana.</item>
+        <item quantity="many">Ten dostęp zużyje 1 zamrożenie serii. Twoja seria (%1$d dni) zostanie zachowana.</item>
+        <item quantity="other">Ten dostęp zużyje 1 zamrożenie serii. Twoja seria (%1$d dnia) zostanie zachowana.</item>
+    </plurals>
+    <plurals name="block_consequence_break">
+        <item quantity="one">Ten dostęp przerwie Twoją serię (%1$d dzień).</item>
+        <item quantity="few">Ten dostęp przerwie Twoją serię (%1$d dni).</item>
+        <item quantity="many">Ten dostęp przerwie Twoją serię (%1$d dni).</item>
+        <item quantity="other">Ten dostęp przerwie Twoją serię (%1$d dnia).</item>
+    </plurals>
+
     <!-- Onboarding -->
     <string name="onboarding_next">Dalej</string>
     <string name="onboarding_finish">Zakończ</string>

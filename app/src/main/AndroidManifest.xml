@@ -40,6 +40,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".presentation.block.BlockActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:taskAffinity="${applicationId}.block"
+            android:theme="@style/Theme.Pause" />
+
         <service
             android:name=".service.PauseAccessibilityService"
             android:exported="true"
