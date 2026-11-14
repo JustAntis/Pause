@@ -15,6 +15,7 @@ import com.justantis.pause.domain.model.PermissionStatus
 import com.justantis.pause.domain.model.UsageSummary
 import com.justantis.pause.domain.model.UserSettings
 import com.justantis.pause.domain.repository.AppCatalogRepository
+import com.justantis.pause.domain.repository.BackgroundWorkScheduler
 import com.justantis.pause.domain.repository.BlockRepository
 import com.justantis.pause.domain.repository.FocusRepository
 import com.justantis.pause.domain.repository.LimitRepository
@@ -192,8 +193,8 @@ class FakeFocusRepository(private val clock: Clock) : FocusRepository {
         }
     }
 
-    override suspend fun finishSession(sessionId: Long, status: FocusSessionStatus) = sessions.update { list ->
-        list.map { if (it.id == sessionId && it.isRunning) it.copy(endedAt = clock.instant(), status = status) else it }
+    override suspend fun finishSession(sessionId: Long, status: FocusSessionStatus, endedAt: Instant) = sessions.update { list ->
+        list.map { if (it.id == sessionId && it.isRunning) it.copy(endedAt = endedAt, status = status) else it }
     }
 
     override fun observeSessions(from: LocalDate, to: LocalDate): Flow<List<FocusSession>> = sessions
@@ -234,4 +235,21 @@ class FakeStreakRepository(initial: StreakState = StreakState.EMPTY) : StreakRep
     val streak = MutableStateFlow(initial)
 
     override fun observeStreak(today: LocalDate): Flow<StreakState> = streak
+}
+
+class FakeWorkScheduler : BackgroundWorkScheduler {
+    var usageSyncScheduled = false
+    var focusEndAt: Instant? = null
+
+    override fun scheduleUsageSync() {
+        usageSyncScheduled = true
+    }
+
+    override fun scheduleFocusSessionEnd(at: Instant) {
+        focusEndAt = at
+    }
+
+    override fun cancelFocusSessionEnd() {
+        focusEndAt = null
+    }
 }

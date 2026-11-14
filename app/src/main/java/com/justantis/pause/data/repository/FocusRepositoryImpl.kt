@@ -11,6 +11,7 @@ import com.justantis.pause.domain.repository.FocusRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.Clock
+import java.time.Instant
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -56,8 +57,8 @@ class FocusRepositoryImpl @Inject constructor(
         status = FocusSessionStatus.INTERRUPTED
     )
 
-    override suspend fun finishSession(sessionId: Long, status: FocusSessionStatus) =
-        focusSessionDao.finish(sessionId, clock.millis(), status)
+    override suspend fun finishSession(sessionId: Long, status: FocusSessionStatus, endedAt: Instant) =
+        focusSessionDao.finish(sessionId, endedAt.toEpochMilli(), status)
 
     override fun observeSessions(from: LocalDate, to: LocalDate): Flow<List<FocusSession>> {
         val start = from.atStartOfDay(clock.zone).toInstant().toEpochMilli()

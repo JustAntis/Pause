@@ -3,6 +3,7 @@ package com.justantis.pause.domain.repository
 import com.justantis.pause.domain.model.FocusSession
 import com.justantis.pause.domain.model.FocusSessionStatus
 import kotlinx.coroutines.flow.Flow
+import java.time.Instant
 import java.time.LocalDate
 
 /**
@@ -27,8 +28,8 @@ interface FocusRepository {
     /** Marks a running session as interrupted ("with breaks"); it keeps running. */
     suspend fun markInterrupted(sessionId: Long)
 
-    /** Ends a running session with [status]. Does nothing if it has already ended. */
-    suspend fun finishSession(sessionId: Long, status: FocusSessionStatus)
+    /** Ends a running session with [status] at [endedAt]. Does nothing if it has already ended. */
+    suspend fun finishSession(sessionId: Long, status: FocusSessionStatus, endedAt: Instant)
 
     /** Sessions that started from [from] to [to], both inclusive. */
     fun observeSessions(from: LocalDate, to: LocalDate): Flow<List<FocusSession>>
