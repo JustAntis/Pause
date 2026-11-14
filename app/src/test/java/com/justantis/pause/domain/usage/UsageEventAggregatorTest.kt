@@ -71,11 +71,17 @@ class UsageEventAggregatorTest {
     }
 
     @Test
-    fun `session that started before the window without its foreground event starts at the window start`() {
-        val result = aggregate(listOf(event(INSTAGRAM, at(0, 15), BACKGROUND)))
+    fun `background event without a matching foreground event adds no time`() {
+        val result = aggregate(
+            listOf(
+                event(SETTINGS, at(20, 58), BACKGROUND),
+                event(INSTAGRAM, at(21, 0), FOREGROUND),
+                event(INSTAGRAM, at(21, 10), BACKGROUND)
+            )
+        )
 
-        assertEquals(minutes(15), result.usageOf(INSTAGRAM)!!.foregroundMs)
-        assertEquals(0, result.usageOf(INSTAGRAM)!!.openCount)
+        assertNull(result.usageOf(SETTINGS))
+        assertEquals(minutes(10), result.totalScreenTimeMs)
     }
 
     @Test
@@ -178,6 +184,7 @@ class UsageEventAggregatorTest {
     private companion object {
         const val INSTAGRAM = "com.instagram.android"
         const val TELEGRAM = "org.telegram.messenger"
+        const val SETTINGS = "com.android.settings"
         const val SYSTEM = "android"
     }
 }

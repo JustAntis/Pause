@@ -18,8 +18,10 @@ import java.time.temporal.ChronoUnit
  * - A session without a BACKGROUND event is closed by SCREEN_OFF or SHUTDOWN, or by the window end
  *   if the app is still in front.
  * - Events may start before the window; their time is clipped to the window. A session is counted
- *   as an "open" only in the window where it started. A BACKGROUND event that comes before anything
- *   else belongs to a session that started before the window, so it is counted from the window start.
+ *   as an "open" only in the window where it started.
+ * - A BACKGROUND event without a matching FOREGROUND event adds no time. The system history can
+ *   start in the middle of a day (for example after a reboot), so the start of such a session is
+ *   unknown. Callers pass events from before the window so that sessions crossing its start are found.
  */
 object UsageEventAggregator {
 
@@ -50,7 +52,6 @@ object UsageEventAggregator {
         private var currentPackage: String? = null
         private var currentStart = 0L
         private var pausedAt: Long? = null
-        private var anythingSeen = false
 
         fun onForeground(packageName: String, time: Long) {
             val current = currentPackage
@@ -67,21 +68,14 @@ object UsageEventAggregator {
                 currentStart = time
                 totals.addOpen(packageName, time)
             }
-            anythingSeen = true
         }
 
         fun onBackground(packageName: String, time: Long) {
-            if (packageName == currentPackage) {
-                if (pausedAt == null) pausedAt = time
-            } else if (currentPackage == null && !anythingSeen) {
-                totals.addInterval(packageName, Long.MIN_VALUE, time)
-            }
-            anythingSeen = true
+            if (packageName == currentPackage && pausedAt == null) pausedAt = time
         }
 
         fun onScreenOff(time: Long) {
             close(pausedAt ?: time)
-            anythingSeen = true
         }
 
         fun onWindowEnd(windowEnd: Long) {
