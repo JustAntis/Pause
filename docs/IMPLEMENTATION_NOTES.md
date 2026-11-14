@@ -10,6 +10,7 @@ Written while the app is being built; completed in phase 9. The structure follow
 | 1 | `domain/model/*`, `UsageEventAggregator`, `PauseDatabase` + DAOs (schema in `app/schemas`), `SettingsDataStore`, `UsageStatsDataSource`, `InstalledAppsDataSource`, repositories + Hilt modules |
 | 2 | Navigation (`Destinations`, `PauseNavHost`, `PauseBottomBar`, `MainViewModel`), Onboarding, Home on real data (`HomeStateMapper`), accessibility service declaration |
 | 3 | Limits list (`LimitsStateMapper`), Limit edit, `AppPickerSheet`, `AppIcon` |
+| 5 | `StreakCalculator`, `StreakConfig`, `DayTracking`, `CloseFinishedDaysUseCase`, `StreakRepository`, Profile (`ProfileStateMapper`, `ProfileViewModel`, `ProfileScreen`), debug-only `DemoDataSeeder` + `DebugToolsActivity` |
 | 4 | `FrictionConfig`, `FrictionPolicy`, `EnforcementController`, `PauseAccessibilityService`, `BlockActivity` + `BlockFlow` (`LimitReachedScreen`, `PauseScreen`, `PurposeScreen`), `BlockViewModel`, `BypassConsequence`, `GrantAccessUseCase` |
 
 ## 2. Deviations from the spec and decisions taken
@@ -33,6 +34,15 @@ Written while the app is being built; completed in phase 9. The structure follow
 | D15 | `BlockViewModel` | Depends on `FrictionPolicy` directly, besides use cases. | It is a pure domain rule without data access. |
 | D16 | Streak on the break screen | Streak, freezes and the consequence banner use the real rule (`BypassConsequence`) but get 0 streak / 0 freezes until phase 5 provides the streak. | Streak calculator is phase 5. |
 | D17 | "5 minutes left" notification | Not yet posted by the controller. | Notifications are phase 8. |
+| D18 | Bypass on an untracked day | A day with a limit bypass is FROZEN or BROKEN even if it later closes as untracked. | The freeze is used / the streak drops "immediately" (§4.2); changing that at day close would make the result depend on when it is computed. |
+| D19 | "A limit applied that day" | Approximated by the current, enabled limits that were created by the end of that day and are active on its weekday. The accessibility-service state at the moment of closing applies to all days closed in that run. | Past limits and past service state are not stored. Days are normally closed on the next app start or by the 15-minute worker (phase 6), so the approximation is close. |
+| D20 | Re-syncing old days | `syncDay` never replaces a stored day with an empty result. | The system deletes raw events after a few days; re-syncing would otherwise wipe history. |
+| D21 | Onboarding date | Stored when onboarding finishes; installs that finished onboarding before this existed get today. | Needed for "untracked before onboarding". |
+| D22 | Settings | The settings icon on Profile opens a placeholder until phase 8. | Settings is phase 8. |
+
+### Debug tools (debug builds only)
+
+`app/src/debug/` contains `DemoDataSeeder`, `DebugToolsActivity`, a manifest that adds a launcher shortcut "Seed demo history" (long-press the app icon) and debug-only strings. Also: `adb shell am start -n com.justantis.pause/.debug.DebugToolsActivity`. It writes 35 closed past days (8 untracked, 9 clean, 1 frozen, 4 clean, 1 broken, 12 clean) with per-app usage for apps installed on the phone and a few break-screen attempts; result: streak 12, record 13, 1 of 2 freezes, next in 2 days. Today is never changed. Verified: the release APK contains neither the classes nor the shortcut. "Delete all data" (phase 8) removes the demo data.
 
 ### Unlock counting
 
