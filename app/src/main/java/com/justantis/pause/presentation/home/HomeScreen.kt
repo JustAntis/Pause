@@ -170,15 +170,15 @@ private fun AppsScreenTimeCard() {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            AppScreenTime(appName = "Instagram", usedMinutes = 40, limitMinutes = 35)
-            AppScreenTime(appName = "Telegram", usedMinutes = 27, limitMinutes = 45)
-            AppScreenTime(appName = "Facebook", usedMinutes = 11, limitMinutes = 20)
+            AppScreenTimeWithProgress(appName = "Instagram", usedMinutes = 40, limitMinutes = 35)
+            AppScreenTimeWithProgress(appName = "Telegram", usedMinutes = 27, limitMinutes = 45)
+            AppScreenTimeWithProgress(appName = "Facebook", usedMinutes = 11, limitMinutes = 20)
         }
     }
 }
 
 @Composable
-fun AppScreenTime(appName: String, usedMinutes: Int, limitMinutes: Int) {
+fun AppScreenTimeWithProgress(appName: String, usedMinutes: Int, limitMinutes: Int) {
     val isOverLimit = usedMinutes >= limitMinutes
     val progress = if (limitMinutes > 0) usedMinutes.toFloat() / limitMinutes else 1f
     val accent = if (isOverLimit) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
