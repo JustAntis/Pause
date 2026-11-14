@@ -15,5 +15,13 @@ data class UserSettings(
     companion object {
         const val DEFAULT_SCREEN_TIME_GOAL_MINUTES = 180
         const val DEFAULT_UNLOCK_GOAL = 40
+
+        const val SCREEN_TIME_GOAL_STEP_MINUTES = 15
+        const val SCREEN_TIME_GOAL_MIN_MINUTES = 30
+        const val SCREEN_TIME_GOAL_MAX_MINUTES = 12 * 60
+
+        const val UNLOCK_GOAL_STEP = 5
+        const val UNLOCK_GOAL_MIN = 5
+        const val UNLOCK_GOAL_MAX = 200
     }
 }
