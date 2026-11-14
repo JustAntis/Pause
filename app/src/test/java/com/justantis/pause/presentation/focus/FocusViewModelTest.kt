@@ -14,6 +14,7 @@ import com.justantis.pause.domain.usecase.StartFocusSessionUseCase
 import com.justantis.pause.testing.FakeAppCatalogRepository
 import com.justantis.pause.testing.FakeFocusRepository
 import com.justantis.pause.testing.FakeLimitRepository
+import com.justantis.pause.testing.FakeNotifier
 import com.justantis.pause.testing.FakeWorkScheduler
 import com.justantis.pause.testing.MainDispatcherRule
 import com.justantis.pause.testing.TestClock
@@ -43,6 +44,7 @@ class FocusViewModelTest {
         val clock = TestClock(scope.testScheduler, Instant.parse("2026-11-14T10:00:00Z"), ZoneId.of("Europe/Warsaw"))
         val focus = FakeFocusRepository(clock)
         val scheduler = FakeWorkScheduler()
+        val notifier = FakeNotifier()
         val limits = FakeLimitRepository(
             limited.map { AppLimit(it, 30, DayOfWeek.entries.toSet(), enabled = true, createdAt = Instant.EPOCH) }
         )
@@ -60,9 +62,9 @@ class FocusViewModelTest {
             observeFocusApps = ObserveFocusAppsUseCase(focus),
             observeLimits = ObserveLimitsUseCase(limits),
             getLaunchableApps = GetLaunchableAppsUseCase(catalog),
-            startFocusSession = StartFocusSessionUseCase(focus, scheduler),
-            finishExpiredFocusSession = FinishExpiredFocusSessionUseCase(focus, scheduler, clock),
-            endFocusSessionEarly = EndFocusSessionEarlyUseCase(focus, scheduler, clock),
+            startFocusSession = StartFocusSessionUseCase(focus, scheduler, notifier),
+            finishExpiredFocusSession = FinishExpiredFocusSessionUseCase(focus, scheduler, notifier, clock),
+            endFocusSessionEarly = EndFocusSessionEarlyUseCase(focus, scheduler, notifier, clock),
             clock = clock
         )
     }

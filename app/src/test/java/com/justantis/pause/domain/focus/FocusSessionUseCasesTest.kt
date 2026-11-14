@@ -5,6 +5,7 @@ import com.justantis.pause.domain.usecase.EndFocusSessionEarlyUseCase
 import com.justantis.pause.domain.usecase.FinishExpiredFocusSessionUseCase
 import com.justantis.pause.domain.usecase.StartFocusSessionUseCase
 import com.justantis.pause.testing.FakeFocusRepository
+import com.justantis.pause.testing.FakeNotifier
 import com.justantis.pause.testing.FakeWorkScheduler
 import com.justantis.pause.testing.TestClock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,6 +14,7 @@ import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.Instant
 import java.time.ZoneId
@@ -24,9 +26,10 @@ class FocusSessionUseCasesTest {
         val clock = TestClock(scope.testScheduler, Instant.parse("2026-11-14T10:00:00Z"), ZoneId.of("Europe/Warsaw"))
         val focus = FakeFocusRepository(clock)
         val scheduler = FakeWorkScheduler()
-        val start = StartFocusSessionUseCase(focus, scheduler)
-        val finishExpired = FinishExpiredFocusSessionUseCase(focus, scheduler, clock)
-        val endEarly = EndFocusSessionEarlyUseCase(focus, scheduler, clock)
+        val notifier = FakeNotifier()
+        val start = StartFocusSessionUseCase(focus, scheduler, notifier)
+        val finishExpired = FinishExpiredFocusSessionUseCase(focus, scheduler, notifier, clock)
+        val endEarly = EndFocusSessionEarlyUseCase(focus, scheduler, notifier, clock)
     }
 
     @Test
@@ -114,6 +117,31 @@ class FocusSessionUseCasesTest {
         assertEquals(FocusSessionStatus.CANCELLED, ended.status)
         assertEquals(s.clock.instant(), ended.endedAt)
         assertNull(s.scheduler.focusEndAt)
+    }
+
+    @Test
+    fun `a running session shows an ongoing notification that is replaced by the result`() = runTest {
+        val s = Setup(this)
+        val session = s.start(plannedMinutes = 25, pausedApps = setOf(INSTAGRAM))
+        assertEquals(session, s.notifier.focusRunning)
+
+        s.focus.markInterrupted(session.id)
+        advanceTimeBy(25 * 60_000L)
+        s.finishExpired()
+
+        assertNull(s.notifier.focusRunning)
+        assertEquals(listOf(true), s.notifier.focusFinished)
+    }
+
+    @Test
+    fun `ending early removes the notification without a result`() = runTest {
+        val s = Setup(this)
+        s.start(plannedMinutes = 25, pausedApps = setOf(INSTAGRAM))
+
+        s.endEarly()
+
+        assertNull(s.notifier.focusRunning)
+        assertTrue(s.notifier.focusFinished.isEmpty())
     }
 
     private companion object {
