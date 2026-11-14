@@ -165,6 +165,22 @@
     <string name="app_picker_title_multiple">Choose apps</string>
     <string name="app_picker_done">Done</string>
 
+    <!-- Notifications -->
+    <string name="channel_limits">Limits</string>
+    <string name="channel_focus">Focus</string>
+    <string name="channel_summary">Summary</string>
+    <string name="notification_limit_title">%1$s: limit almost used up</string>
+    <plurals name="notification_limit_text">
+        <item quantity="one">%1$d minute left for today.</item>
+        <item quantity="other">%1$d minutes left for today.</item>
+    </plurals>
+    <string name="notification_focus_running_title">Focus session in progress</string>
+    <string name="notification_focus_running_text">Paused apps will show a break screen until the session ends.</string>
+    <string name="notification_focus_finished_title">Focus session finished</string>
+    <string name="notification_summary_title">Your week</string>
+    <string name="notification_summary_text">Daily screen time: %1$s. Streak: %2$s.</string>
+    <string name="notification_summary_text_change">Daily screen time: %1$s (%2$s). Streak: %3$s.</string>
+
     <!-- Onboarding -->
     <string name="onboarding_next">Next</string>
     <string name="onboarding_finish">Finish</string>

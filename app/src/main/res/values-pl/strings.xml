@@ -179,6 +179,24 @@
     <string name="app_picker_title_multiple">Wybierz aplikacje</string>
     <string name="app_picker_done">Gotowe</string>
 
+    <!-- Notifications -->
+    <string name="channel_limits">Limity</string>
+    <string name="channel_focus">Skupienie</string>
+    <string name="channel_summary">Podsumowanie</string>
+    <string name="notification_limit_title">%1$s: limit prawie wykorzystany</string>
+    <plurals name="notification_limit_text">
+        <item quantity="one">Na dziś została %1$d minuta.</item>
+        <item quantity="few">Na dziś zostały %1$d minuty.</item>
+        <item quantity="many">Na dziś zostało %1$d minut.</item>
+        <item quantity="other">Na dziś zostało %1$d minuty.</item>
+    </plurals>
+    <string name="notification_focus_running_title">Trwa sesja skupienia</string>
+    <string name="notification_focus_running_text">Wstrzymane aplikacje pokażą ekran przerwy do końca sesji.</string>
+    <string name="notification_focus_finished_title">Sesja skupienia zakończona</string>
+    <string name="notification_summary_title">Twój tydzień</string>
+    <string name="notification_summary_text">Dzienny czas przed ekranem: %1$s. Seria: %2$s.</string>
+    <string name="notification_summary_text_change">Dzienny czas przed ekranem: %1$s (%2$s). Seria: %3$s.</string>
+
     <!-- Onboarding -->
     <string name="onboarding_next">Dalej</string>
     <string name="onboarding_finish">Zakończ</string>

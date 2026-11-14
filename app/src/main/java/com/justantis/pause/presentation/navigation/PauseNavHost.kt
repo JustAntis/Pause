@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,22 +32,35 @@ import com.justantis.pause.presentation.profile.ProfileRoute
 import com.justantis.pause.presentation.stats.StatsRoute
 
 @Composable
-fun PauseAppContent(viewModel: MainViewModel = hiltViewModel()) {
+fun PauseAppContent(
+    openTarget: OpenTarget?,
+    onOpenTargetHandled: () -> Unit,
+    viewModel: MainViewModel = hiltViewModel()
+) {
     val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
     when (startDestination) {
         StartDestination.Loading -> Surface(modifier = Modifier.fillMaxSize()) {}
-        StartDestination.Onboarding -> PauseNavHost(startDestination = OnboardingDestination)
-        StartDestination.Main -> PauseNavHost(startDestination = MainGraph)
+        StartDestination.Onboarding -> PauseNavHost(OnboardingDestination, openTarget, onOpenTargetHandled)
+        StartDestination.Main -> PauseNavHost(MainGraph, openTarget, onOpenTargetHandled)
     }
 }
 
 @Composable
 fun PauseNavHost(
     startDestination: Any,
+    openTarget: OpenTarget?,
+    onOpenTargetHandled: () -> Unit,
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val selectedTab = backStackEntry?.destination?.topLevelTab()
+
+    LaunchedEffect(openTarget, backStackEntry != null) {
+        val target = openTarget ?: return@LaunchedEffect
+        val current = backStackEntry?.destination ?: return@LaunchedEffect
+        if (!current.hasRoute(OnboardingDestination::class)) navController.navigateTo(target)
+        onOpenTargetHandled()
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -113,6 +127,12 @@ fun PauseNavHost(
 
 private fun NavDestination.topLevelTab(): TopLevelTab? =
     TopLevelTab.entries.firstOrNull { tab -> hierarchy.any { it.hasRoute(tab.destination::class) } }
+
+private fun NavHostController.navigateTo(target: OpenTarget) = when (target) {
+    OpenTarget.Focus -> navigate(FocusDestination) { launchSingleTop = true }
+    OpenTarget.Statistics -> navigateToTab(TopLevelTab.Statistics)
+    is OpenTarget.AppDetails -> navigate(AppDetailsDestination(target.packageName))
+}
 
 private fun NavHostController.navigateToTab(tab: TopLevelTab) {
     navigate(tab.destination) {

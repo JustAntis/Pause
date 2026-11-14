@@ -9,11 +9,13 @@ import com.justantis.pause.data.repository.SettingsRepositoryImpl
 import com.justantis.pause.data.repository.StreakRepositoryImpl
 import com.justantis.pause.data.repository.UsageRepositoryImpl
 import com.justantis.pause.data.worker.WorkManagerScheduler
+import com.justantis.pause.notification.NotificationHelper
 import com.justantis.pause.domain.repository.AppCatalogRepository
 import com.justantis.pause.domain.repository.BackgroundWorkScheduler
 import com.justantis.pause.domain.repository.BlockRepository
 import com.justantis.pause.domain.repository.FocusRepository
 import com.justantis.pause.domain.repository.LimitRepository
+import com.justantis.pause.domain.repository.Notifier
 import com.justantis.pause.domain.repository.PermissionRepository
 import com.justantis.pause.domain.repository.SettingsRepository
 import com.justantis.pause.domain.repository.StreakRepository
@@ -61,4 +63,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindBackgroundWorkScheduler(impl: WorkManagerScheduler): BackgroundWorkScheduler
+
+    @Binds
+    abstract fun bindNotifier(impl: NotificationHelper): Notifier
 }
