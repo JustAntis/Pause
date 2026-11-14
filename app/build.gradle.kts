@@ -39,6 +39,10 @@ android {
     }
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 dependencies {
     implementation(libs.androidx.compose.ui.text.google.fonts)
     implementation(platform(libs.androidx.compose.bom))
