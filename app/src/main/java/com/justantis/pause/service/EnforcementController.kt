@@ -8,11 +8,13 @@ import com.justantis.pause.domain.repository.LimitRepository
 import com.justantis.pause.domain.repository.UsageRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.Clock
 import java.time.Duration
 import java.time.Instant
@@ -125,11 +127,18 @@ class EnforcementController @Inject constructor(
         return Decision.CheckAgainAt(minOf(now.plusMillis(remainingMs), midnight))
     }
 
+    /**
+     * Marks the app as blocked before anything suspends, so a change arriving meanwhile does not
+     * start a second check, and finishes recording and showing without being cancelled: a cancelled
+     * check would otherwise leave an attempt stored that the user never saw.
+     */
     private suspend fun block(packageName: String, decision: Decision.Block) {
         val launcher = launcher ?: return
-        val eventId = blockRepository.recordAttempt(packageName, decision.reason, decision.focusSessionId)
         blockShownFor = packageName
-        launcher.showBlockScreen(packageName, eventId, decision.reason, decision.focusSessionId)
+        withContext(NonCancellable) {
+            val eventId = blockRepository.recordAttempt(packageName, decision.reason, decision.focusSessionId)
+            launcher.showBlockScreen(packageName, eventId, decision.reason, decision.focusSessionId)
+        }
     }
 
     private sealed interface Decision {

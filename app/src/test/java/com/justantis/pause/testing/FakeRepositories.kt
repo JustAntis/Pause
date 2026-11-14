@@ -94,7 +94,19 @@ class FakeBlockRepository(private val clock: Clock) : BlockRepository {
     val events = MutableStateFlow<List<BlockEvent>>(emptyList())
     val grants = mutableMapOf<String, AccessGrant>()
 
+    /**
+     * Makes [recordAttempt] suspend after the row is written, like a Room insert whose caller resumes
+     * only after the write: cancelling the caller then leaves the row in place.
+     */
+    var recordDelayMs = 0L
+
     override suspend fun recordAttempt(packageName: String, reason: BlockReason, focusSessionId: Long?): Long {
+        val id = insertAttempt(packageName, reason, focusSessionId)
+        if (recordDelayMs > 0) kotlinx.coroutines.delay(recordDelayMs)
+        return id
+    }
+
+    private fun insertAttempt(packageName: String, reason: BlockReason, focusSessionId: Long?): Long {
         val id = (events.value.maxOfOrNull { it.id } ?: 0L) + 1
         events.update {
             it + BlockEvent(

@@ -298,6 +298,25 @@ class EnforcementControllerTest {
         assertEquals(1, s.launcher.shown.size)
     }
 
+    @Test
+    fun `a change arriving while an attempt is being recorded does not record a second one`() = runTest {
+        val s = setup()
+        s.limit(INSTAGRAM, 45)
+        s.used(INSTAGRAM, 45)
+        s.blocks.recordDelayMs = 100
+        runCurrent()
+
+        s.controller.onAppInForeground(INSTAGRAM)
+        advanceTimeBy(50)
+        s.limit(TELEGRAM, 30)
+        advanceTimeBy(500)
+        runCurrent()
+
+        assertEquals(1, s.blocks.events.value.size)
+        assertEquals(1, s.launcher.shown.size)
+        assertEquals(s.blocks.events.value.single().id, s.launcher.shown.single().eventId)
+    }
+
     private companion object {
         const val INSTAGRAM = "com.instagram.android"
         const val TELEGRAM = "org.telegram.messenger"
