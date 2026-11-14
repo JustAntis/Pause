@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -248,12 +249,14 @@ private fun TimePerDayCard(state: LimitEditState, onIntent: (LimitEditIntent) ->
                 decreaseEnabled = state.canDecrease,
                 increaseEnabled = state.canIncrease
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+            ) {
                 LimitEditState.PRESETS_MINUTES.forEach { minutes ->
                     FilterChip(
                         selected = state.limitMinutes == minutes,
                         onClick = { onIntent(LimitEditIntent.PresetSelected(minutes)) },
-                        label = { Text(text = formatDuration(minutes)) }
+                        label = { Text(text = formatDuration(minutes), maxLines = 1) }
                     )
                 }
             }
@@ -338,7 +341,7 @@ fun LimitEditScreenPreview() {
     }
 }
 
-@Preview(device = "spec:width=411dp,height=891dp", showSystemUi = true, showBackground = true)
+@Preview(device = "spec:width=360dp,height=780dp", showSystemUi = true, showBackground = true)
 @Composable
 fun LimitEditScreenCreatePreview() {
     PauseTheme {
