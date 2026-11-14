@@ -7,6 +7,8 @@ import com.justantis.pause.domain.model.UsageSummary
 import com.justantis.pause.testing.FakeBlockRepository
 import com.justantis.pause.testing.FakeFocusRepository
 import com.justantis.pause.testing.FakeLimitRepository
+import com.justantis.pause.testing.FakeNotifier
+import com.justantis.pause.testing.FakeSettingsRepository
 import com.justantis.pause.testing.FakeUsageRepository
 import com.justantis.pause.testing.TestClock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,11 +48,15 @@ class EnforcementControllerTest {
         val blocks = FakeBlockRepository(clock)
         val usage = FakeUsageRepository()
         val launcher = FakeLauncher()
+        val settings = FakeSettingsRepository()
+        val notifier = FakeNotifier()
         val controller = EnforcementController(
             limitRepository = limits,
             focusRepository = focus,
             blockRepository = blocks,
             usageRepository = usage,
+            settingsRepository = settings,
+            notifier = notifier,
             clock = clock,
             scope = scope.backgroundScope
         ).also { it.start(launcher) }
@@ -315,6 +321,72 @@ class EnforcementControllerTest {
         assertEquals(1, s.blocks.events.value.size)
         assertEquals(1, s.launcher.shown.size)
         assertEquals(s.blocks.events.value.single().id, s.launcher.shown.single().eventId)
+    }
+
+    @Test
+    fun `a warning is shown 5 minutes before the limit ends and the block follows`() = runTest {
+        val s = setup()
+        s.limit(INSTAGRAM, 45)
+        s.used(INSTAGRAM, 30)
+        runCurrent()
+
+        s.controller.onAppInForeground(INSTAGRAM)
+        advanceTimeBy(minutes(10) - 1_000)
+        runCurrent()
+        assertTrue(s.notifier.limitWarnings.isEmpty())
+
+        s.used(INSTAGRAM, 40)
+        advanceTimeBy(2_000)
+        runCurrent()
+        assertEquals(listOf(INSTAGRAM to 5), s.notifier.limitWarnings)
+
+        s.used(INSTAGRAM, 45)
+        advanceTimeBy(minutes(5))
+        runCurrent()
+        assertEquals(BlockReason.LIMIT, s.launcher.shown.single().reason)
+    }
+
+    @Test
+    fun `less than 5 minutes left when the app is opened warns at once`() = runTest {
+        val s = setup()
+        s.limit(INSTAGRAM, 45)
+        s.used(INSTAGRAM, 42)
+        runCurrent()
+
+        s.controller.onAppInForeground(INSTAGRAM)
+        runCurrent()
+
+        assertEquals(listOf(INSTAGRAM to 3), s.notifier.limitWarnings)
+    }
+
+    @Test
+    fun `the warning is shown once per app per day`() = runTest {
+        val s = setup()
+        s.limit(INSTAGRAM, 45)
+        s.used(INSTAGRAM, 42)
+        runCurrent()
+
+        s.controller.onAppInForeground(INSTAGRAM)
+        runCurrent()
+        s.controller.onAppInForeground(TELEGRAM)
+        s.controller.onAppInForeground(INSTAGRAM)
+        runCurrent()
+
+        assertEquals(1, s.notifier.limitWarnings.size)
+    }
+
+    @Test
+    fun `no warning when the setting is off`() = runTest {
+        val s = setup()
+        s.settings.setNotifyBeforeLimit(false)
+        s.limit(INSTAGRAM, 45)
+        s.used(INSTAGRAM, 42)
+        runCurrent()
+
+        s.controller.onAppInForeground(INSTAGRAM)
+        runCurrent()
+
+        assertTrue(s.notifier.limitWarnings.isEmpty())
     }
 
     private companion object {

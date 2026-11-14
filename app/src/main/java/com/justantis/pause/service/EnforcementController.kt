@@ -5,6 +5,8 @@ import com.justantis.pause.domain.model.BlockReason
 import com.justantis.pause.domain.repository.BlockRepository
 import com.justantis.pause.domain.repository.FocusRepository
 import com.justantis.pause.domain.repository.LimitRepository
+import com.justantis.pause.domain.repository.Notifier
+import com.justantis.pause.domain.repository.SettingsRepository
 import com.justantis.pause.domain.repository.UsageRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -12,6 +14,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,7 +30,8 @@ import javax.inject.Singleton
  * 1. the app has unexpired time-boxed access → allow and check again when it expires;
  * 2. a Focus Mode session is running and the app is paused in Focus Mode → show the break screen;
  * 3. the app has a limit for today → show the break screen when it is used up, otherwise check
- *    again when the rest of it would be used up;
+ *    again when the rest of it would be used up. If the setting is on, a notification warns
+ *    5 minutes before that, once per app per day;
  * 4. otherwise do nothing.
  *
  * Every wait also ends at local midnight, when limits and counters roll over. The controller is
@@ -40,6 +44,8 @@ class EnforcementController @Inject constructor(
     private val focusRepository: FocusRepository,
     private val blockRepository: BlockRepository,
     private val usageRepository: UsageRepository,
+    private val settingsRepository: SettingsRepository,
+    private val notifier: Notifier,
     private val clock: Clock,
     @ApplicationScope private val scope: CoroutineScope
 ) {
@@ -48,6 +54,7 @@ class EnforcementController @Inject constructor(
     private var blockShownFor: String? = null
     private var checkJob: Job? = null
     private var changesJob: Job? = null
+    private val warnedToday = mutableSetOf<Pair<LocalDate, String>>()
 
     fun start(launcher: BlockScreenLauncher) {
         this.launcher = launcher
@@ -124,7 +131,17 @@ class EnforcementController @Inject constructor(
         val usedMs = usageRepository.usageOn(today).usageOf(packageName)?.foregroundMs ?: 0L
         val remainingMs = Duration.ofMinutes(limit.limitMinutes.toLong()).toMillis() - usedMs
         if (remainingMs <= 0) return Decision.Block(BlockReason.LIMIT, focusSessionId = null)
-        return Decision.CheckAgainAt(minOf(now.plusMillis(remainingMs), midnight))
+
+        val limitEnd = now.plusMillis(remainingMs)
+        val warnAt = limitEnd.minus(WARNING_BEFORE)
+        val warningKey = today to packageName
+        if (warningKey !in warnedToday && settingsRepository.settings.first().notifyBeforeLimit) {
+            if (now.isBefore(warnAt)) return Decision.CheckAgainAt(minOf(warnAt, midnight))
+            warnedToday += warningKey
+            val minutesLeft = ((remainingMs + MILLIS_PER_MINUTE - 1) / MILLIS_PER_MINUTE).toInt()
+            notifier.showLimitWarning(packageName, minutesLeft)
+        }
+        return Decision.CheckAgainAt(minOf(limitEnd, midnight))
     }
 
     /**
@@ -150,5 +167,7 @@ class EnforcementController @Inject constructor(
     private companion object {
         /** Avoids a busy loop when usage data lags behind the clock by a moment. */
         const val MIN_WAIT_MS = 1_000L
+        const val MILLIS_PER_MINUTE = 60_000L
+        val WARNING_BEFORE: Duration = Duration.ofMinutes(5)
     }
 }

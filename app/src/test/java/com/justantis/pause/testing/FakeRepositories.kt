@@ -19,6 +19,8 @@ import com.justantis.pause.domain.repository.BackgroundWorkScheduler
 import com.justantis.pause.domain.repository.BlockRepository
 import com.justantis.pause.domain.repository.FocusRepository
 import com.justantis.pause.domain.repository.LimitRepository
+import com.justantis.pause.domain.repository.Notifier
+import com.justantis.pause.domain.repository.WeeklySummary
 import com.justantis.pause.domain.repository.PermissionRepository
 import com.justantis.pause.domain.repository.SettingsRepository
 import com.justantis.pause.domain.repository.StreakRepository
@@ -263,5 +265,38 @@ class FakeWorkScheduler : BackgroundWorkScheduler {
 
     override fun cancelFocusSessionEnd() {
         focusEndAt = null
+    }
+}
+
+class FakeNotifier : Notifier {
+    val limitWarnings = mutableListOf<Pair<String, Int>>()
+    var focusRunning: FocusSession? = null
+    val focusFinished = mutableListOf<Boolean>()
+    val weeklySummaries = mutableListOf<WeeklySummary>()
+    var clearedAll = false
+
+    override fun showLimitWarning(packageName: String, minutesLeft: Int) {
+        limitWarnings += packageName to minutesLeft
+    }
+
+    override fun showFocusRunning(session: FocusSession) {
+        focusRunning = session
+    }
+
+    override fun showFocusFinished(withBreaks: Boolean) {
+        focusRunning = null
+        focusFinished += withBreaks
+    }
+
+    override fun clearFocus() {
+        focusRunning = null
+    }
+
+    override fun showWeeklySummary(summary: WeeklySummary) {
+        weeklySummaries += summary
+    }
+
+    override fun clearAll() {
+        clearedAll = true
     }
 }
