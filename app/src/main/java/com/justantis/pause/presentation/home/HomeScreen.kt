@@ -2,6 +2,7 @@ package com.justantis.pause.presentation.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -32,11 +34,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -51,6 +53,7 @@ import com.justantis.pause.presentation.components.openUsageAccessSettings
 import com.justantis.pause.presentation.theme.PauseTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
 fun HomeRoute(
@@ -83,6 +86,13 @@ fun HomeScreen(
     onIntent: (HomeIntent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    if (state.isLoading) {
+        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -139,7 +149,7 @@ fun HomeScreen(
 
 @Composable
 private fun formatDate(date: LocalDate): String {
-    val locale = LocalConfiguration.current.locales[0]
+    val locale = Locale.forLanguageTag(stringResource(R.string.app_locale_tag))
     val formatter = remember(locale) { DateTimeFormatter.ofPattern("EEEE, d MMMM", locale) }
     return date.format(formatter).replaceFirstChar { it.titlecase(locale) }
 }
@@ -189,7 +199,7 @@ private fun StreakCard(streakDays: Int, freezes: Int, maxFreezes: Int) {
                 .fillMaxWidth()
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Icon(
                 imageVector = Icons.Rounded.LocalFireDepartment,
@@ -197,17 +207,22 @@ private fun StreakCard(streakDays: Int, freezes: Int, maxFreezes: Int) {
                 tint = MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier.size(48.dp)
             )
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = pluralStringResource(R.plurals.home_streak_days, streakDays, streakDays),
                     style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
                 )
                 Text(
                     text = stringResource(
                         if (streakDays > 0) R.string.home_streak_caption else R.string.home_streak_caption_start
                     ),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
                 )
             }
             Card(
@@ -224,7 +239,12 @@ private fun StreakCard(streakDays: Int, freezes: Int, maxFreezes: Int) {
                         text = stringResource(R.string.home_freezes_value, freezes, maxFreezes),
                         style = MaterialTheme.typography.titleMedium
                     )
-                    Text(text = stringResource(R.string.home_freezes_label), style = MaterialTheme.typography.labelSmall)
+                    Text(
+                        text = stringResource(R.string.home_freezes_label),
+                        style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                        softWrap = false
+                    )
                 }
             }
         }
@@ -371,6 +391,22 @@ fun HomeScreenPreview() {
                     HomeAppItem("org.telegram.messenger", "Telegram", 27, 45, 0.6f),
                     HomeAppItem("com.facebook.katana", "Facebook", 21, null, 0.5f)
                 )
+            ),
+            onIntent = {}
+        )
+    }
+}
+
+@Preview(device = "spec:width=360dp,height=780dp", showSystemUi = true, showBackground = true)
+@Composable
+fun HomeScreenNarrowPreview() {
+    PauseTheme {
+        HomeScreen(
+            state = HomeState(
+                date = LocalDate.of(2026, 11, 14),
+                isLoading = false,
+                screenTimeMinutes = 134,
+                unlocks = 46
             ),
             onIntent = {}
         )

@@ -39,6 +39,8 @@
     <string name="onboarding_goals_title">Twoje dzienne cele</string>
     <string name="onboarding_goals_subtitle">Pomagają zobaczyć, jak mija Twój dzień. Możesz je później zmienić.</string>
 
+    <string name="app_locale_tag">pl</string>
+
     <!-- Durations -->
     <string name="duration_minutes">%1$d min</string>
     <string name="duration_hours">%1$d h</string>

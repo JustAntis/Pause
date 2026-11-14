@@ -41,6 +41,9 @@
     <string name="onboarding_goals_title">Your daily goals</string>
     <string name="onboarding_goals_subtitle">They help you see how your day is going. You can change them later.</string>
 
+    <!-- Language of the resources in this folder; dates are formatted in it so they match the UI. -->
+    <string name="app_locale_tag">en</string>
+
     <!-- Durations -->
     <string name="duration_minutes">%1$d min</string>
     <string name="duration_hours">%1$dh</string>
