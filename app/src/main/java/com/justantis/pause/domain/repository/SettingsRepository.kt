@@ -23,4 +23,9 @@ interface SettingsRepository {
     suspend fun setNotifyBeforeLimit(enabled: Boolean)
 
     suspend fun setNotifyWeeklySummary(enabled: Boolean)
+
+    /** Whether past days were already imported from the system once. */
+    suspend fun isHistoryBackfilled(): Boolean
+
+    suspend fun setHistoryBackfilled()
 }

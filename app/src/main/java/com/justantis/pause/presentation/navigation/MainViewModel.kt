@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.justantis.pause.domain.usecase.CloseFinishedDaysUseCase
 import com.justantis.pause.domain.usecase.ObserveSettingsUseCase
+import com.justantis.pause.domain.usecase.ScheduleBackgroundWorkUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,13 +16,15 @@ import javax.inject.Inject
 enum class StartDestination { Loading, Onboarding, Main }
 
 /**
- * Decides once, at app start, whether the user still has to finish onboarding, and closes the
- * days that ended since the app was last opened.
+ * Decides once, at app start, whether the user still has to finish onboarding. For onboarded
+ * users it makes sure the history sync is scheduled and closes the days that ended since the app
+ * was last opened.
  */
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val observeSettings: ObserveSettingsUseCase,
-    private val closeFinishedDays: CloseFinishedDaysUseCase
+    private val closeFinishedDays: CloseFinishedDaysUseCase,
+    private val scheduleBackgroundWork: ScheduleBackgroundWorkUseCase
 ) : ViewModel() {
 
     private val _startDestination = MutableStateFlow(StartDestination.Loading)
@@ -32,7 +35,10 @@ class MainViewModel @Inject constructor(
             val settings = observeSettings().first()
             _startDestination.value =
                 if (settings.onboardingCompleted) StartDestination.Main else StartDestination.Onboarding
-            closeFinishedDays()
+            if (settings.onboardingCompleted) {
+                scheduleBackgroundWork()
+                closeFinishedDays()
+            }
         }
     }
 }

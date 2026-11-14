@@ -4,6 +4,7 @@ import com.justantis.pause.data.datastore.SettingsDataStore
 import com.justantis.pause.domain.model.UserSettings
 import com.justantis.pause.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -31,4 +32,8 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override suspend fun setNotifyWeeklySummary(enabled: Boolean) =
         settingsDataStore.setNotifyWeeklySummary(enabled)
+
+    override suspend fun isHistoryBackfilled(): Boolean = settingsDataStore.historyBackfilled.first()
+
+    override suspend fun setHistoryBackfilled() = settingsDataStore.setHistoryBackfilled()
 }

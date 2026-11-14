@@ -36,11 +36,10 @@ class UsageRepositoryImpl @Inject constructor(
         UsageEventAggregator.aggregate(events, start, end, zone)
     }
 
-    override suspend fun syncDay(date: LocalDate) {
+    override suspend fun syncDay(date: LocalDate): Boolean {
         val summary = usageOn(date)
+        if (summary.apps.isEmpty() && summary.unlockCount == 0) return false
         withContext(ioDispatcher) {
-            val stored = dailyUsageDao.getSummary(date)
-            if (summary.apps.isEmpty() && summary.unlockCount == 0 && stored != null) return@withContext
             dailyUsageDao.replaceDay(
                 date = date,
                 screenTimeMs = summary.totalScreenTimeMs,
@@ -55,6 +54,7 @@ class UsageRepositoryImpl @Inject constructor(
                 }
             )
         }
+        return true
     }
 
     override suspend fun closeDay(date: LocalDate, tracked: Boolean) =

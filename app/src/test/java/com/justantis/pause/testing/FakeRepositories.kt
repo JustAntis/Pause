@@ -62,8 +62,12 @@ class FakeUsageRepository(var summary: UsageSummary = UsageSummary.EMPTY) : Usag
     val syncedDays = mutableListOf<LocalDate>()
     val closedDays = mutableMapOf<LocalDate, Boolean>()
 
-    override suspend fun syncDay(date: LocalDate) {
+    /** Days for which the system still has events; null means every day has events. */
+    var daysWithEvents: Set<LocalDate>? = null
+
+    override suspend fun syncDay(date: LocalDate): Boolean {
         syncedDays += date
+        return daysWithEvents?.contains(date) ?: true
     }
 
     override suspend fun closeDay(date: LocalDate, tracked: Boolean) {
@@ -197,6 +201,13 @@ class FakeFocusRepository(private val clock: Clock) : FocusRepository {
 
 class FakeSettingsRepository(initial: UserSettings = UserSettings()) : SettingsRepository {
     override val settings = MutableStateFlow(initial)
+    var historyBackfilled = false
+
+    override suspend fun isHistoryBackfilled(): Boolean = historyBackfilled
+
+    override suspend fun setHistoryBackfilled() {
+        historyBackfilled = true
+    }
 
     override suspend fun setOnboardingCompleted(completed: Boolean) = settings.update { it.copy(onboardingCompleted = completed) }
 

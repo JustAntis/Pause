@@ -8,7 +8,9 @@ import com.justantis.pause.data.repository.PermissionRepositoryImpl
 import com.justantis.pause.data.repository.SettingsRepositoryImpl
 import com.justantis.pause.data.repository.StreakRepositoryImpl
 import com.justantis.pause.data.repository.UsageRepositoryImpl
+import com.justantis.pause.data.worker.WorkManagerScheduler
 import com.justantis.pause.domain.repository.AppCatalogRepository
+import com.justantis.pause.domain.repository.BackgroundWorkScheduler
 import com.justantis.pause.domain.repository.BlockRepository
 import com.justantis.pause.domain.repository.FocusRepository
 import com.justantis.pause.domain.repository.LimitRepository
@@ -56,4 +58,7 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindStreakRepository(impl: StreakRepositoryImpl): StreakRepository
+
+    @Binds
+    abstract fun bindBackgroundWorkScheduler(impl: WorkManagerScheduler): BackgroundWorkScheduler
 }

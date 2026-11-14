@@ -14,10 +14,11 @@ interface UsageRepository {
     suspend fun usageOn(date: LocalDate): UsageSummary
 
     /**
-     * Recomputes [date] from system events and stores it in the history. A stored day is never
-     * replaced by an empty result, because the system deletes old events after a few days.
+     * Recomputes [date] from system events and stores it in the history. An empty result is never
+     * stored, because the system deletes old events after a few days and a stored day must not be
+     * wiped. Returns whether the system still had usage for that day.
      */
-    suspend fun syncDay(date: LocalDate)
+    suspend fun syncDay(date: LocalDate): Boolean
 
     /** Marks [date] as finished with its streak eligibility; its totals stay as stored. */
     suspend fun closeDay(date: LocalDate, tracked: Boolean)

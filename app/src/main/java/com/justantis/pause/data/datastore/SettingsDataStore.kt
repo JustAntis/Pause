@@ -31,6 +31,10 @@ class SettingsDataStore @Inject constructor(
         )
     }
 
+    val historyBackfilled: Flow<Boolean> = dataStore.data.map { it[HISTORY_BACKFILLED] ?: false }
+
+    suspend fun setHistoryBackfilled() = set(HISTORY_BACKFILLED, true)
+
     suspend fun setOnboardingCompleted(completed: Boolean) = set(ONBOARDING_COMPLETED, completed)
 
     suspend fun setOnboardingCompletedOn(date: LocalDate) = set(ONBOARDING_COMPLETED_ON, date.toEpochDay())
@@ -67,5 +71,6 @@ class SettingsDataStore @Inject constructor(
         private val UNLOCK_GOAL = intPreferencesKey("unlockGoal")
         private val NOTIFY_BEFORE_LIMIT = booleanPreferencesKey("notifyBeforeLimit")
         private val NOTIFY_WEEKLY_SUMMARY = booleanPreferencesKey("notifyWeeklySummary")
+        private val HISTORY_BACKFILLED = booleanPreferencesKey("historyBackfilled")
     }
 }
