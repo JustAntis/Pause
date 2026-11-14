@@ -5,10 +5,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.justantis.pause.domain.model.UserSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,6 +21,7 @@ class SettingsDataStore @Inject constructor(
     val settings: Flow<UserSettings> = dataStore.data.map { preferences ->
         UserSettings(
             onboardingCompleted = preferences[ONBOARDING_COMPLETED] ?: false,
+            onboardingCompletedOn = preferences[ONBOARDING_COMPLETED_ON]?.let { LocalDate.ofEpochDay(it) },
             userName = preferences[USER_NAME],
             screenTimeGoalMinutes = preferences[SCREEN_TIME_GOAL_MINUTES]
                 ?: UserSettings.DEFAULT_SCREEN_TIME_GOAL_MINUTES,
@@ -29,6 +32,8 @@ class SettingsDataStore @Inject constructor(
     }
 
     suspend fun setOnboardingCompleted(completed: Boolean) = set(ONBOARDING_COMPLETED, completed)
+
+    suspend fun setOnboardingCompletedOn(date: LocalDate) = set(ONBOARDING_COMPLETED_ON, date.toEpochDay())
 
     suspend fun setUserName(name: String?) {
         dataStore.edit { preferences ->
@@ -56,6 +61,7 @@ class SettingsDataStore @Inject constructor(
         const val FILE_NAME = "settings"
 
         private val ONBOARDING_COMPLETED = booleanPreferencesKey("onboardingCompleted")
+        private val ONBOARDING_COMPLETED_ON = longPreferencesKey("onboardingCompletedOn")
         private val USER_NAME = stringPreferencesKey("userName")
         private val SCREEN_TIME_GOAL_MINUTES = intPreferencesKey("screenTimeGoalMinutes")
         private val UNLOCK_GOAL = intPreferencesKey("unlockGoal")

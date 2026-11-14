@@ -11,11 +11,15 @@ import com.justantis.pause.domain.model.DailySummary
 import com.justantis.pause.domain.model.FocusSession
 import com.justantis.pause.domain.model.FocusSessionStatus
 import com.justantis.pause.domain.model.InstalledApp
+import com.justantis.pause.domain.model.PermissionStatus
 import com.justantis.pause.domain.model.UsageSummary
+import com.justantis.pause.domain.model.UserSettings
 import com.justantis.pause.domain.repository.AppCatalogRepository
 import com.justantis.pause.domain.repository.BlockRepository
 import com.justantis.pause.domain.repository.FocusRepository
 import com.justantis.pause.domain.repository.LimitRepository
+import com.justantis.pause.domain.repository.PermissionRepository
+import com.justantis.pause.domain.repository.SettingsRepository
 import com.justantis.pause.domain.repository.UsageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,7 +57,18 @@ class FakeUsageRepository(var summary: UsageSummary = UsageSummary.EMPTY) : Usag
 
     override suspend fun usageOn(date: LocalDate): UsageSummary = summaryByDate[date] ?: summary
 
-    override suspend fun syncDay(date: LocalDate) = Unit
+    val syncedDays = mutableListOf<LocalDate>()
+    val closedDays = mutableMapOf<LocalDate, Boolean>()
+
+    override suspend fun syncDay(date: LocalDate) {
+        syncedDays += date
+    }
+
+    override suspend fun closeDay(date: LocalDate, tracked: Boolean) {
+        closedDays[date] = tracked
+    }
+
+    override suspend fun lastClosedDay(): LocalDate? = closedDays.keys.maxOrNull()
 
     override fun observeDailySummaries(from: LocalDate, to: LocalDate): Flow<List<DailySummary>> =
         flowOf(emptyList())
@@ -176,4 +191,28 @@ class FakeFocusRepository(private val clock: Clock) : FocusRepository {
     }
 
     override fun observeSessions(from: LocalDate, to: LocalDate): Flow<List<FocusSession>> = sessions
+}
+
+class FakeSettingsRepository(initial: UserSettings = UserSettings()) : SettingsRepository {
+    override val settings = MutableStateFlow(initial)
+
+    override suspend fun setOnboardingCompleted(completed: Boolean) = settings.update { it.copy(onboardingCompleted = completed) }
+
+    override suspend fun setOnboardingCompletedOn(date: LocalDate) = settings.update { it.copy(onboardingCompletedOn = date) }
+
+    override suspend fun setUserName(name: String?) = settings.update { it.copy(userName = name) }
+
+    override suspend fun setScreenTimeGoalMinutes(minutes: Int) = settings.update { it.copy(screenTimeGoalMinutes = minutes) }
+
+    override suspend fun setUnlockGoal(unlocks: Int) = settings.update { it.copy(unlockGoal = unlocks) }
+
+    override suspend fun setNotifyBeforeLimit(enabled: Boolean) = settings.update { it.copy(notifyBeforeLimit = enabled) }
+
+    override suspend fun setNotifyWeeklySummary(enabled: Boolean) = settings.update { it.copy(notifyWeeklySummary = enabled) }
+}
+
+class FakePermissionRepository(
+    var status: PermissionStatus = PermissionStatus(usageAccess = true, accessibilityService = true, notifications = true)
+) : PermissionRepository {
+    override fun currentStatus(): PermissionStatus = status
 }

@@ -6,6 +6,7 @@ import androidx.room.Query
 import com.justantis.pause.data.local.entity.BlockEventEntity
 import com.justantis.pause.domain.model.AccessPurpose
 import com.justantis.pause.domain.model.BlockOutcome
+import com.justantis.pause.domain.model.BlockReason
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
@@ -40,4 +41,10 @@ interface BlockEventDao {
 
     @Query("SELECT COUNT(*) FROM block_event WHERE date = :date AND outcome = :outcome")
     fun observeCountWithOutcome(date: LocalDate, outcome: BlockOutcome): Flow<Int>
+
+    @Query(
+        "SELECT date, COUNT(*) AS count FROM block_event " +
+            "WHERE reason = :reason AND outcome = :outcome GROUP BY date"
+    )
+    fun observeCountsByDate(reason: BlockReason, outcome: BlockOutcome): Flow<List<DateCount>>
 }

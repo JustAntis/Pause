@@ -1,11 +1,15 @@
 package com.justantis.pause.domain.model
 
+import java.time.LocalDate
+
 /**
  * User preferences. The two goals are personal targets used only for display and chart
- * highlighting; they do not affect the streak.
+ * highlighting; they do not affect the streak. Days before [onboardingCompletedOn] are never
+ * tracked for the streak.
  */
 data class UserSettings(
     val onboardingCompleted: Boolean = false,
+    val onboardingCompletedOn: LocalDate? = null,
     val userName: String? = null,
     val screenTimeGoalMinutes: Int = DEFAULT_SCREEN_TIME_GOAL_MINUTES,
     val unlockGoal: Int = DEFAULT_UNLOCK_GOAL,

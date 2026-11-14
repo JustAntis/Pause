@@ -17,8 +17,26 @@ interface DailyUsageDao {
     @Query("SELECT * FROM daily_app_usage WHERE date BETWEEN :from AND :to ORDER BY date")
     fun observeAppUsage(from: LocalDate, to: LocalDate): Flow<List<DailyAppUsageEntity>>
 
+    @Query("SELECT * FROM daily_summary ORDER BY date")
+    fun observeAllSummaries(): Flow<List<DailySummaryEntity>>
+
     @Query("SELECT * FROM daily_summary WHERE date = :date")
     suspend fun getSummary(date: LocalDate): DailySummaryEntity?
+
+    @Query("SELECT MAX(date) FROM daily_summary WHERE closed = 1")
+    suspend fun getLastClosedDate(): LocalDate?
+
+    @Query("UPDATE daily_summary SET closed = 1, tracked = :tracked WHERE date = :date")
+    suspend fun markClosed(date: LocalDate, tracked: Boolean)
+
+    /** Marks [date] as finished; a day without any stored usage gets an empty row first. */
+    @Transaction
+    suspend fun closeDay(date: LocalDate, tracked: Boolean) {
+        if (getSummary(date) == null) {
+            upsertSummary(DailySummaryEntity(date, screenTimeMs = 0, unlockCount = 0, closed = false, tracked = false))
+        }
+        markClosed(date, tracked)
+    }
 
     @Upsert
     suspend fun upsertSummary(summary: DailySummaryEntity)

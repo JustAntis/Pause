@@ -6,6 +6,7 @@ import com.justantis.pause.data.repository.FocusRepositoryImpl
 import com.justantis.pause.data.repository.LimitRepositoryImpl
 import com.justantis.pause.data.repository.PermissionRepositoryImpl
 import com.justantis.pause.data.repository.SettingsRepositoryImpl
+import com.justantis.pause.data.repository.StreakRepositoryImpl
 import com.justantis.pause.data.repository.UsageRepositoryImpl
 import com.justantis.pause.domain.repository.AppCatalogRepository
 import com.justantis.pause.domain.repository.BlockRepository
@@ -13,6 +14,7 @@ import com.justantis.pause.domain.repository.FocusRepository
 import com.justantis.pause.domain.repository.LimitRepository
 import com.justantis.pause.domain.repository.PermissionRepository
 import com.justantis.pause.domain.repository.SettingsRepository
+import com.justantis.pause.domain.repository.StreakRepository
 import com.justantis.pause.domain.repository.UsageRepository
 import dagger.Binds
 import dagger.Module
@@ -50,4 +52,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindPermissionRepository(impl: PermissionRepositoryImpl): PermissionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindStreakRepository(impl: StreakRepositoryImpl): StreakRepository
 }
