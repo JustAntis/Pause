@@ -189,7 +189,14 @@ private fun LastDaysCard(state: AppDetailsState) {
                 fontWeight = FontWeight.Bold
             )
             UsageBarChart(
-                bars = state.bars.map { ChartBar(it.minutes, dayName(it.date.dayOfWeek, TextStyle.NARROW), it.style) },
+                bars = state.bars.map {
+                    ChartBar(
+                        minutes = it.minutes,
+                        label = dayName(it.date.dayOfWeek, TextStyle.NARROW),
+                        style = it.style,
+                        spokenLabel = dayName(it.date.dayOfWeek, TextStyle.FULL)
+                    )
+                },
                 axisStepMinutes = if ((state.bars.maxOfOrNull { it.minutes } ?: 0) > 90) 60 else 15
             )
             Text(

@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -281,15 +283,24 @@ private fun ActiveDaysCard(activeDays: Set<DayOfWeek>, onDayToggled: (DayOfWeek)
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                DayOfWeek.entries.forEach { day ->
-                    DayToggle(
-                        label = dayName(day, TextStyle.NARROW),
-                        description = dayName(day, TextStyle.FULL),
-                        selected = day in activeDays,
-                        onToggle = { onDayToggled(day) },
-                        modifier = Modifier.weight(1f)
-                    )
+            BoxWithConstraints {
+                val oneRow = maxWidth >= MIN_TOGGLE_SIZE * DayOfWeek.entries.size + TOGGLE_SPACING * (DayOfWeek.entries.size - 1)
+                val rows = if (oneRow) listOf(DayOfWeek.entries) else DayOfWeek.entries.chunked(4)
+                Column(verticalArrangement = Arrangement.spacedBy(TOGGLE_SPACING)) {
+                    rows.forEach { days ->
+                        Row(horizontalArrangement = Arrangement.spacedBy(TOGGLE_SPACING)) {
+                            days.forEach { day ->
+                                DayToggle(
+                                    label = dayName(day, TextStyle.NARROW),
+                                    description = dayName(day, TextStyle.FULL),
+                                    selected = day in activeDays,
+                                    onToggle = { onDayToggled(day) },
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                            if (!oneRow) repeat(4 - days.size) { Spacer(modifier = Modifier.weight(1f)) }
+                        }
+                    }
                 }
             }
         }
@@ -306,7 +317,8 @@ private fun DayToggle(
 ) {
     Box(
         modifier = modifier
-            .height(48.dp)
+            .height(MIN_TOGGLE_SIZE)
+            .widthIn(min = MIN_TOGGLE_SIZE)
             .clip(RoundedCornerShape(8.dp))
             .background(
                 if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
@@ -322,6 +334,10 @@ private fun DayToggle(
         )
     }
 }
+
+/** The minimum touch target; the seven toggles wrap to two rows when they do not fit. */
+private val MIN_TOGGLE_SIZE = 48.dp
+private val TOGGLE_SPACING = 4.dp
 
 @Preview(device = "spec:width=411dp,height=891dp", showSystemUi = true, showBackground = true)
 @Composable

@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
@@ -30,7 +32,8 @@ import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 /** NORMAL bars are muted, HIGHLIGHT marks today, WARNING marks a value over the goal or limit. */
 enum class BarStyle { NORMAL, HIGHLIGHT, WARNING }
 
-data class ChartBar(val minutes: Int, val label: String, val style: BarStyle)
+/** [spokenLabel] is what screen readers say for the bar; the axis shows the short [label]. */
+data class ChartBar(val minutes: Int, val label: String, val style: BarStyle, val spokenLabel: String = label)
 
 private val StylesKey = ExtraStore.Key<List<BarStyle>>()
 private val LabelsKey = ExtraStore.Key<List<String>>()
@@ -38,7 +41,8 @@ private val LabelsKey = ExtraStore.Key<List<String>>()
 /**
  * A column chart of minutes per bar, based on the Vico setup of the original statistics chart.
  * Scrolling and zooming are off and the whole range is fitted to the width, so every bar of the
- * period is visible. Each bar is coloured by its [BarStyle]; [labelSpacing] shows every n-th bottom label and
+ * period is visible. Screen readers get one description listing every bar's label and value.
+ * Each bar is coloured by its [BarStyle]; [labelSpacing] shows every n-th bottom label and
  * [axisStepMinutes] sets the step of the vertical axis.
  */
 @Composable
@@ -70,6 +74,9 @@ fun UsageBarChart(
     }
 
     val durations = rememberDurationTexts()
+    val description = remember(bars, durations) {
+        bars.joinToString(separator = ", ") { "${it.spokenLabel} ${durations.format(it.minutes)}" }
+    }
     val labelStyle = MaterialTheme.typography.labelSmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
     val axisLabel = rememberAxisLabelComponent(style = labelStyle)
     val verticalFormatter = remember(durations) {
@@ -96,7 +103,9 @@ fun UsageBarChart(
             )
         ),
         modelProducer = modelProducer,
-        modifier = modifier.height(200.dp),
+        modifier = modifier
+            .height(200.dp)
+            .clearAndSetSemantics { contentDescription = description },
         scrollState = rememberVicoScrollState(scrollEnabled = false),
         zoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.Content, minZoom = Zoom.Content)
     )

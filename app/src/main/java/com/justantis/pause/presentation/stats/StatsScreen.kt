@@ -37,10 +37,12 @@ import com.justantis.pause.presentation.components.BarStyle
 import com.justantis.pause.presentation.components.ChartBar
 import com.justantis.pause.presentation.components.ObserveEffects
 import com.justantis.pause.presentation.components.UsageBarChart
+import com.justantis.pause.presentation.components.appLocale
 import com.justantis.pause.presentation.components.dayName
 import com.justantis.pause.presentation.components.formatDuration
 import com.justantis.pause.presentation.theme.PauseTheme
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import kotlin.math.abs
 
@@ -192,7 +194,13 @@ private fun chartBars(state: StatsState): List<ChartBar> = state.bars.map { bar 
         bar.date != null -> bar.date.dayOfMonth.toString()
         else -> ""
     }
-    ChartBar(minutes = bar.minutes, label = label, style = bar.style)
+    val spokenLabel = when {
+        bar.hour != null -> stringResource(R.string.stats_hour_spoken, bar.hour)
+        bar.date != null && state.period == StatsPeriod.Week -> dayName(bar.date.dayOfWeek, TextStyle.FULL)
+        bar.date != null -> bar.date.format(DateTimeFormatter.ofPattern("d MMMM", appLocale()))
+        else -> label
+    }
+    ChartBar(minutes = bar.minutes, label = label, style = bar.style, spokenLabel = spokenLabel)
 }
 
 @Composable

@@ -325,6 +325,7 @@
     <string name="stats_change_none">%1$d%% vs poprzedni okres</string>
     <string name="stats_caption_day">Czas przed ekranem w każdej godzinie dzisiaj. Bieżąca godzina jest wyróżniona.</string>
     <string name="stats_caption_days">Czerwony: powyżej celu (%1$s). Wyróżniony: dzisiaj.</string>
+    <string name="stats_hour_spoken">%1$d:00</string>
     <string name="stats_no_apps">Brak użycia aplikacji w tym okresie.</string>
     <string name="stats_unlocks_per_day">Odblokowania dziennie</string>
     <string name="stats_limit_bypasses">Ominięte limity</string>
