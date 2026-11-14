@@ -11,7 +11,8 @@ data class UsageEvent(
 )
 
 /**
- * FOREGROUND and BACKGROUND mark an app coming to the front and leaving it, UNLOCK is a screen
- * unlock, SCREEN_OFF and SHUTDOWN end whatever was in the foreground.
+ * FOREGROUND and BACKGROUND mark an app coming to the front and leaving it. UNLOCK is the lock
+ * screen being dismissed and KEYGUARD_SHOWN the lock screen appearing; SCREEN_ON is the screen
+ * turning on. SCREEN_OFF and SHUTDOWN end whatever was in the foreground.
  */
-enum class UsageEventType { FOREGROUND, BACKGROUND, UNLOCK, SCREEN_OFF, SHUTDOWN }
+enum class UsageEventType { FOREGROUND, BACKGROUND, UNLOCK, KEYGUARD_SHOWN, SCREEN_ON, SCREEN_OFF, SHUTDOWN }

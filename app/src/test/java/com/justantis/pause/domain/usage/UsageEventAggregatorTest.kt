@@ -4,6 +4,8 @@ import com.justantis.pause.domain.model.UsageEvent
 import com.justantis.pause.domain.model.UsageEventType
 import com.justantis.pause.domain.model.UsageEventType.BACKGROUND
 import com.justantis.pause.domain.model.UsageEventType.FOREGROUND
+import com.justantis.pause.domain.model.UsageEventType.KEYGUARD_SHOWN
+import com.justantis.pause.domain.model.UsageEventType.SCREEN_ON
 import com.justantis.pause.domain.model.UsageEventType.SCREEN_OFF
 import com.justantis.pause.domain.model.UsageEventType.SHUTDOWN
 import com.justantis.pause.domain.model.UsageEventType.UNLOCK
@@ -155,6 +157,61 @@ class UsageEventAggregatorTest {
         )
 
         assertEquals(2, result.unlockCount)
+    }
+
+    @Test
+    fun `with a lock screen only real unlocks are counted, not screen turn-ons`() {
+        val result = aggregate(
+            listOf(
+                event(SYSTEM, at(8, 0), SCREEN_ON),
+                event(SYSTEM, at(8, 0), UNLOCK),
+                event(SYSTEM, at(9, 0), SCREEN_ON),
+                event(SYSTEM, at(9, 1), KEYGUARD_SHOWN),
+                event(SYSTEM, at(10, 0), SCREEN_ON),
+                event(SYSTEM, at(10, 0), UNLOCK)
+            )
+        )
+
+        assertEquals(2, result.unlockCount)
+    }
+
+    @Test
+    fun `with a lock screen a day without unlocks counts zero even if the screen turned on`() {
+        val result = aggregate(
+            listOf(
+                event(SYSTEM, at(7, 0), KEYGUARD_SHOWN),
+                event(SYSTEM, at(8, 0), SCREEN_ON),
+                event(SYSTEM, at(9, 0), SCREEN_ON)
+            )
+        )
+
+        assertEquals(0, result.unlockCount)
+    }
+
+    @Test
+    fun `without a lock screen screen turn-ons inside the window count as unlocks`() {
+        val result = aggregate(
+            listOf(
+                event(SYSTEM, at(23, 0, day.minusDays(1)), SCREEN_ON),
+                event(SYSTEM, at(8, 0), SCREEN_ON),
+                event(SYSTEM, at(8, 30), SCREEN_OFF),
+                event(SYSTEM, at(21, 36), SCREEN_ON)
+            )
+        )
+
+        assertEquals(2, result.unlockCount)
+    }
+
+    @Test
+    fun `lock screen events from before the window decide how unlocks are counted`() {
+        val result = aggregate(
+            listOf(
+                event(SYSTEM, at(22, 0, day.minusDays(1)), KEYGUARD_SHOWN),
+                event(SYSTEM, at(8, 0), SCREEN_ON)
+            )
+        )
+
+        assertEquals(0, result.unlockCount)
     }
 
     @Test

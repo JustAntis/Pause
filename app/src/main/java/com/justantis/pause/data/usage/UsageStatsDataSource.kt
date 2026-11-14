@@ -34,6 +34,8 @@ class UsageStatsDataSource @Inject constructor(
         UsageEvents.Event.ACTIVITY_RESUMED -> UsageEventType.FOREGROUND
         UsageEvents.Event.ACTIVITY_PAUSED -> UsageEventType.BACKGROUND
         UsageEvents.Event.KEYGUARD_HIDDEN -> UsageEventType.UNLOCK
+        UsageEvents.Event.KEYGUARD_SHOWN -> UsageEventType.KEYGUARD_SHOWN
+        UsageEvents.Event.SCREEN_INTERACTIVE -> UsageEventType.SCREEN_ON
         UsageEvents.Event.SCREEN_NON_INTERACTIVE -> UsageEventType.SCREEN_OFF
         UsageEvents.Event.DEVICE_SHUTDOWN -> UsageEventType.SHUTDOWN
         else -> null

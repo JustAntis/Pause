@@ -22,6 +22,7 @@ import java.time.temporal.ChronoUnit
  * - A BACKGROUND event without a matching FOREGROUND event adds no time. The system history can
  *   start in the middle of a day (for example after a reboot), so the start of such a session is
  *   unknown. Callers pass events from before the window so that sessions crossing its start are found.
+ * - Unlocks: see [countUnlocks].
  */
 object UsageEventAggregator {
 
@@ -31,7 +32,7 @@ object UsageEventAggregator {
         windowEnd: Long,
         zone: ZoneId
     ): UsageSummary {
-        val totals = WindowTotals(windowStart, windowEnd, zone)
+        val totals = WindowTotals(windowStart, windowEnd, zone, countUnlocks(events))
         val session = SessionTracker(totals)
 
         for (event in events.sortedBy { it.timestamp }) {
@@ -41,11 +42,27 @@ object UsageEventAggregator {
                 UsageEventType.BACKGROUND -> session.onBackground(event.packageName, event.timestamp)
                 UsageEventType.SCREEN_OFF,
                 UsageEventType.SHUTDOWN -> session.onScreenOff(event.timestamp)
-                UsageEventType.UNLOCK -> if (event.timestamp >= windowStart) totals.addUnlock()
+                UsageEventType.UNLOCK,
+                UsageEventType.SCREEN_ON -> totals.onUnlockCandidate(event.type, event.timestamp)
+                UsageEventType.KEYGUARD_SHOWN -> Unit
             }
         }
         session.onWindowEnd(windowEnd)
         return totals.toSummary()
+    }
+
+    /**
+     * Which event counts as an unlock. A device with a lock screen reports the lock screen being
+     * shown and dismissed; then only dismissals (UNLOCK) count. A device without a lock screen never
+     * reports them; then every time the screen turns on counts instead. On such a device a screen
+     * woken by a notification and turned off again without use is also counted (overcounting).
+     * All passed events, including those before the window, are used to recognise a lock screen.
+     */
+    private fun countUnlocks(events: List<UsageEvent>): UsageEventType {
+        val hasLockScreen = events.any {
+            it.type == UsageEventType.UNLOCK || it.type == UsageEventType.KEYGUARD_SHOWN
+        }
+        return if (hasLockScreen) UsageEventType.UNLOCK else UsageEventType.SCREEN_ON
     }
 
     private class SessionTracker(private val totals: WindowTotals) {
@@ -92,7 +109,8 @@ object UsageEventAggregator {
     private class WindowTotals(
         private val windowStart: Long,
         private val windowEnd: Long,
-        private val zone: ZoneId
+        private val zone: ZoneId,
+        private val unlockType: UsageEventType
     ) {
         private val foregroundMs = mutableMapOf<String, Long>()
         private val openCounts = mutableMapOf<String, Int>()
@@ -112,8 +130,8 @@ object UsageEventAggregator {
             openCounts[packageName] = (openCounts[packageName] ?: 0) + 1
         }
 
-        fun addUnlock() {
-            unlocks++
+        fun onUnlockCandidate(type: UsageEventType, time: Long) {
+            if (type == unlockType && time >= windowStart) unlocks++
         }
 
         private fun addToHours(from: Long, to: Long) {
