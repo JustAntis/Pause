@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Debug builds only: demo data tools and a launcher shortcut to open them. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/debug_shortcuts" />
+        </activity>
+
+        <activity
+            android:name=".debug.DebugToolsActivity"
+            android:exported="true"
+            android:label="@string/debug_title"
+            android:theme="@style/Theme.Pause" />
+    </application>
+
+</manifest>

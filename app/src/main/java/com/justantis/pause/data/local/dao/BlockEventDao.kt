@@ -27,6 +27,9 @@ interface BlockEventDao {
         pauseSeconds: Int
     )
 
+    @Query("DELETE FROM block_event WHERE date BETWEEN :from AND :to")
+    suspend fun deleteBetween(from: LocalDate, to: LocalDate)
+
     @Query("SELECT * FROM block_event WHERE id = :id")
     suspend fun get(id: Long): BlockEventEntity?
 
