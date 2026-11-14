@@ -10,7 +10,7 @@ Written while the app is being built; completed in phase 9. The structure follow
 | 1 | `domain/model/*`, `UsageEventAggregator`, `PauseDatabase` + DAOs (schema in `app/schemas`), `SettingsDataStore`, `UsageStatsDataSource`, `InstalledAppsDataSource`, repositories + Hilt modules |
 | 2 | Navigation (`Destinations`, `PauseNavHost`, `PauseBottomBar`, `MainViewModel`), Onboarding, Home on real data (`HomeStateMapper`), accessibility service declaration |
 | 3 | Limits list (`LimitsStateMapper`), Limit edit, `AppPickerSheet`, `AppIcon` |
-| 4 | _in progress_ |
+| 4 | `FrictionConfig`, `FrictionPolicy`, `EnforcementController`, `PauseAccessibilityService`, `BlockActivity` + `BlockFlow` (`LimitReachedScreen`, `PauseScreen`, `PurposeScreen`), `BlockViewModel`, `BypassConsequence`, `GrantAccessUseCase` |
 
 ## 2. Deviations from the spec and decisions taken
 
@@ -27,6 +27,12 @@ Written while the app is being built; completed in phase 9. The structure follow
 | D9 | Goal steppers | Screen time 30 min – 12 h in 15 min steps; unlocks 5 – 200 in steps of 5. | Not specified; accepted by the author. |
 | D10 | Dates | Formatted in the language of the app texts (`app_locale_tag`), not the device locale. | On a Russian device the date was Russian while texts fell back to English. |
 | D11 | Limit day text | A limit active on more than half of the week is described by the days left out ("Except Sat"). | "Mon, Tue, Wed, Thu, Fri, Sun only" is hard to read; accepted by the author. |
+| D12 | Events from Pause itself | Not evaluated (Pause is never blocked), but they tell the controller that the previously tracked app is no longer in front; the same applies to the home launcher. | When the break screen or Pause is in front, a pending timer for the app behind it must not fire. |
+| D13 | Ignored windows | Keyboards (enabled input methods) and non-launchable packages (system UI, dialogs) do not change the app in front. | Opening the keyboard or the notification shade inside a limited app must not stop its timer. |
+| D14 | Leaving the break screen | Leaving it (home, recents, screen off) resets the flow to the first screen and restarts the pause next time, instead of finishing the activity. | Finishing it would show the limited app again after the screen is turned back on. |
+| D15 | `BlockViewModel` | Depends on `FrictionPolicy` directly, besides use cases. | It is a pure domain rule without data access. |
+| D16 | Streak on the break screen | Streak, freezes and the consequence banner use the real rule (`BypassConsequence`) but get 0 streak / 0 freezes until phase 5 provides the streak. | Streak calculator is phase 5. |
+| D17 | "5 minutes left" notification | Not yet posted by the controller. | Notifications are phase 8. |
 
 ### Unlock counting
 
@@ -43,7 +49,10 @@ _Completed in phase 9._
 
 ## 4. What could not be verified
 
-_Completed in phase 9._
+_Completed in phase 9._ Verified so far on a Samsung Galaxy S21 FE (SM-G990B2, Android API 36, no lock screen):
+
+- Phase 4 end to end: a 5-minute limit on Chrome showed the break screen 5 minutes after Chrome was opened; the pause (10 s), purpose and "Open for 1 min" returned to Chrome; when the minute expired the break screen came back with 2 attempts and a 30 s hint; "Close" went to the home screen.
+- Starting `BlockActivity` from the accessibility service was allowed on API 36 (`BAL_ALLOW_TOKEN` in the system log), so the `TYPE_ACCESSIBILITY_OVERLAY` fallback was not needed. **Not verified on API 37** (targetSdk); no API 37 device or emulator was available. Manual check: on an API 37 device, set a 5-minute limit, use the app for 5 minutes and confirm the break screen appears; `adb logcat | grep BlockActivity` must show `result code=0`.
 
 ## 5. Known limitations
 
