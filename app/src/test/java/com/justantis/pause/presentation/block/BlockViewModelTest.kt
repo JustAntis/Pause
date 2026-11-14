@@ -17,10 +17,14 @@ import com.justantis.pause.domain.usecase.GetRunningFocusSessionUseCase
 import com.justantis.pause.domain.usecase.GetUsageOnDayUseCase
 import com.justantis.pause.domain.usecase.GrantAccessUseCase
 import com.justantis.pause.domain.usecase.ObserveAttemptCountsByAppUseCase
+import com.justantis.pause.domain.usecase.ObserveStreakUseCase
+import com.justantis.pause.domain.streak.BypassConsequence
+import com.justantis.pause.domain.streak.StreakState
 import com.justantis.pause.testing.FakeAppCatalogRepository
 import com.justantis.pause.testing.FakeBlockRepository
 import com.justantis.pause.testing.FakeFocusRepository
 import com.justantis.pause.testing.FakeLimitRepository
+import com.justantis.pause.testing.FakeStreakRepository
 import com.justantis.pause.testing.FakeUsageRepository
 import com.justantis.pause.testing.MainDispatcherRule
 import com.justantis.pause.testing.TestClock
@@ -56,6 +60,7 @@ class BlockViewModelTest {
         val usage = FakeUsageRepository(
             UsageSummary.EMPTY.copy(apps = listOf(AppUsage(INSTAGRAM, 47 * 60_000L, 5)))
         )
+        val streak = FakeStreakRepository()
         val effects = mutableListOf<BlockEffect>()
 
         fun viewModel(eventId: Long, reason: BlockReason = BlockReason.LIMIT, focusSessionId: Long? = null) =
@@ -74,6 +79,7 @@ class BlockViewModelTest {
                 observeAttemptCountsByApp = ObserveAttemptCountsByAppUseCase(blocks),
                 getBypassesToday = GetBypassesTodayUseCase(blocks, clock),
                 getRunningFocusSession = GetRunningFocusSessionUseCase(focus),
+                observeStreak = ObserveStreakUseCase(streak),
                 grantAccess = GrantAccessUseCase(blocks, focus, clock),
                 frictionPolicy = FrictionPolicy(),
                 clock = clock
@@ -226,6 +232,18 @@ class BlockViewModelTest {
         runCurrent()
 
         assertEquals(FocusSessionStatus.INTERRUPTED, s.focus.getRunningSession()!!.status)
+    }
+
+    @Test
+    fun `streak is shown and the first limit bypass would use a freeze`() = runTest(mainDispatcherRule.dispatcher) {
+        val s = Setup(this)
+        s.streak.streak.value = StreakState.EMPTY.copy(current = 12, freezes = 1)
+        val viewModel = started(s.viewModel(s.blocks.recordAttempt(INSTAGRAM, BlockReason.LIMIT, null)), s.effects)
+
+        val state = viewModel.state.value
+        assertEquals(12, state.streakDays)
+        assertEquals(1, state.freezes)
+        assertEquals(BypassConsequence.USES_FREEZE, state.consequence)
     }
 
     @Test

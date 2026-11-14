@@ -13,6 +13,7 @@ import com.justantis.pause.domain.usecase.GetRunningFocusSessionUseCase
 import com.justantis.pause.domain.usecase.GetUsageOnDayUseCase
 import com.justantis.pause.domain.usecase.GrantAccessUseCase
 import com.justantis.pause.domain.usecase.ObserveAttemptCountsByAppUseCase
+import com.justantis.pause.domain.usecase.ObserveStreakUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -43,6 +44,7 @@ class BlockViewModel @Inject constructor(
     private val observeAttemptCountsByApp: ObserveAttemptCountsByAppUseCase,
     private val getBypassesToday: GetBypassesTodayUseCase,
     private val getRunningFocusSession: GetRunningFocusSessionUseCase,
+    private val observeStreak: ObserveStreakUseCase,
     private val grantAccess: GrantAccessUseCase,
     private val frictionPolicy: FrictionPolicy,
     private val clock: Clock
@@ -106,6 +108,7 @@ class BlockViewModel @Inject constructor(
             null
         }
         val usedMs = getUsageOnDay(today).usageOf(packageName)?.foregroundMs ?: 0L
+        val streak = observeStreak(today).first()
 
         _state.update {
             it.copy(
@@ -118,11 +121,14 @@ class BlockViewModel @Inject constructor(
                 accessOrdinal = bypasses.total + 1,
                 pauseSeconds = pauseSeconds,
                 pauseSecondsLeft = pauseSeconds,
+                streakDays = streak.current,
+                freezes = streak.freezes,
+                maxFreezes = streak.maxFreezes,
                 consequence = BypassConsequence.of(
                     reason = reason,
                     limitBypassesToday = bypasses.limit,
-                    currentStreak = it.streakDays,
-                    freezes = it.freezes
+                    currentStreak = streak.current,
+                    freezes = streak.freezes
                 )
             )
         }

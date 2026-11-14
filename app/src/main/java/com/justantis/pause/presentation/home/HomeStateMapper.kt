@@ -4,6 +4,7 @@ import com.justantis.pause.domain.model.AppLimit
 import com.justantis.pause.domain.model.PermissionStatus
 import com.justantis.pause.domain.model.UsageSummary
 import com.justantis.pause.domain.model.UserSettings
+import com.justantis.pause.domain.streak.StreakState
 import java.time.LocalDate
 
 /**
@@ -26,12 +27,16 @@ object HomeStateMapper {
         settings: UserSettings,
         limits: List<AppLimit>,
         snapshot: TodaySnapshot,
-        attemptsToday: Int
+        attemptsToday: Int,
+        streak: StreakState
     ) = HomeState(
         date = snapshot.date,
         isLoading = false,
         userName = settings.userName,
         timeOfDay = timeOfDay(snapshot.hour),
+        streakDays = streak.current,
+        freezes = streak.freezes,
+        maxFreezes = streak.maxFreezes,
         screenTimeMinutes = (snapshot.usage.totalScreenTimeMs / MILLIS_PER_MINUTE).toInt(),
         screenTimeGoalMinutes = settings.screenTimeGoalMinutes,
         unlocks = snapshot.usage.unlockCount,

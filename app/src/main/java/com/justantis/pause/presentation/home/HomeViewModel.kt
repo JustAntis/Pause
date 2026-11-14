@@ -9,6 +9,7 @@ import com.justantis.pause.domain.usecase.GetUsageOnDayUseCase
 import com.justantis.pause.domain.usecase.ObserveAttemptCountUseCase
 import com.justantis.pause.domain.usecase.ObserveLimitsUseCase
 import com.justantis.pause.domain.usecase.ObserveSettingsUseCase
+import com.justantis.pause.domain.usecase.ObserveStreakUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -36,6 +37,7 @@ class HomeViewModel @Inject constructor(
     observeSettings: ObserveSettingsUseCase,
     observeLimits: ObserveLimitsUseCase,
     private val observeAttemptCount: ObserveAttemptCountUseCase,
+    private val observeStreak: ObserveStreakUseCase,
     private val getUsageOnDay: GetUsageOnDayUseCase,
     private val getPermissionStatus: GetPermissionStatusUseCase,
     private val getLaunchableApps: GetLaunchableAppsUseCase,
@@ -46,19 +48,19 @@ class HomeViewModel @Inject constructor(
     private var appLabels: Map<String, String>? = null
     private var refreshJob: Job? = null
 
-    private val attemptsToday: Flow<Int> = snapshot
+    private val today: Flow<LocalDate> = snapshot
         .filterNotNull()
         .map { it.date }
         .distinctUntilChanged()
-        .flatMapLatest { observeAttemptCount(it) }
 
     val state: StateFlow<HomeState> = combine(
         observeSettings(),
         observeLimits(),
         snapshot.filterNotNull(),
-        attemptsToday
-    ) { settings, limits, today, attempts ->
-        HomeStateMapper.map(settings, limits, today, attempts)
+        today.flatMapLatest { observeAttemptCount(it) },
+        today.flatMapLatest { observeStreak(it) }
+    ) { settings, limits, todaySnapshot, attempts, streak ->
+        HomeStateMapper.map(settings, limits, todaySnapshot, attempts, streak)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),

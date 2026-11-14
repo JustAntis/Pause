@@ -20,6 +20,8 @@ import com.justantis.pause.domain.repository.FocusRepository
 import com.justantis.pause.domain.repository.LimitRepository
 import com.justantis.pause.domain.repository.PermissionRepository
 import com.justantis.pause.domain.repository.SettingsRepository
+import com.justantis.pause.domain.repository.StreakRepository
+import com.justantis.pause.domain.streak.StreakState
 import com.justantis.pause.domain.repository.UsageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -215,4 +217,10 @@ class FakePermissionRepository(
     var status: PermissionStatus = PermissionStatus(usageAccess = true, accessibilityService = true, notifications = true)
 ) : PermissionRepository {
     override fun currentStatus(): PermissionStatus = status
+}
+
+class FakeStreakRepository(initial: StreakState = StreakState.EMPTY) : StreakRepository {
+    val streak = MutableStateFlow(initial)
+
+    override fun observeStreak(today: LocalDate): Flow<StreakState> = streak
 }

@@ -5,6 +5,7 @@ import com.justantis.pause.domain.model.AppUsage
 import com.justantis.pause.domain.model.PermissionStatus
 import com.justantis.pause.domain.model.UsageSummary
 import com.justantis.pause.domain.model.UserSettings
+import com.justantis.pause.domain.streak.StreakState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -41,13 +42,24 @@ class HomeStateMapperTest {
         settings: UserSettings = UserSettings(),
         hour: Int = 10,
         permissions: PermissionStatus = allGranted,
-        attempts: Int = 0
+        attempts: Int = 0,
+        streak: StreakState = StreakState.EMPTY
     ) = HomeStateMapper.map(
         settings = settings,
         limits = limits,
         snapshot = TodaySnapshot(saturday, hour, usage, labels, permissions),
-        attemptsToday = attempts
+        attemptsToday = attempts,
+        streak = streak
     )
+
+    @Test
+    fun `streak and freezes come from the streak state`() {
+        val state = map(usage(), streak = StreakState.EMPTY.copy(current = 12, freezes = 1))
+
+        assertEquals(12, state.streakDays)
+        assertEquals(1, state.freezes)
+        assertEquals(2, state.maxFreezes)
+    }
 
     @Test
     fun `top apps are the three with the most time`() {
