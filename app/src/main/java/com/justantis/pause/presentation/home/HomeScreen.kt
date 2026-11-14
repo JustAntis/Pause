@@ -34,9 +34,9 @@ import com.justantis.pause.presentation.components.formatDuration
 import com.justantis.pause.presentation.theme.PauseTheme
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
