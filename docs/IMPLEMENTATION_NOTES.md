@@ -72,7 +72,16 @@ Written while the app is being built; completed in phase 9. The structure follow
 
 ## 3. Assumptions A1–A8 and where they are encoded
 
-_Completed in phase 9._
+| # | Assumption | Where |
+|---|---|---|
+| A1 | The pause ladder counts bypasses per day across all apps and Focus Mode; attempt numbers next to an app are per app. | `GetBypassesTodayUseCase` (`total` feeds `FrictionPolicy.pauseSecondsFor`), `ObserveAttemptCountsByAppUseCase` |
+| A2 | Focus Mode bypasses do not use freezes or break the streak. | `BypassConsequence.of` (FOCUS → NONE), `StreakRepositoryImpl` (counts only `LIMIT` + `BYPASSED`) |
+| A3 | A session ended early is CANCELLED and counted neither as clean nor with breaks. | `EndFocusSessionEarlyUseCase`, `FocusViewModel.toState` (today's counts) |
+| A4 | English by default, Polish in `values-pl`. | `res/values/strings.xml`, `res/values-pl/strings.xml`; dates follow the text language via `app_locale_tag` |
+| A5 | Onboarding: welcome + optional name, permissions, goals. | `OnboardingStep`, `OnboardingScreen` |
+| A6 | No applicable limit or the accessibility service off at day close → untracked. | `DayTracking.isTracked`, `CloseFinishedDaysUseCase` |
+| A7 | Day = today by hour, Week = current Mon–Sun, Month = last 30 days. | `StatisticsRanges` |
+| A8 | 5-minute steps, 5 min – 8 h, one value per app with a weekday mask. | `AppLimit` (`STEP_MINUTES`, `MIN_MINUTES`, `MAX_MINUTES`), `SaveLimitUseCase` (validation), `DaysMask` |
 
 ## 4. What could not be verified
 
