@@ -93,6 +93,36 @@
         <item quantity="other">Ten dostęp przerwie Twoją serię (%1$d dnia).</item>
     </plurals>
 
+    <!-- Profile -->
+    <string name="profile_settings">Ustawienia</string>
+    <plurals name="profile_days">
+        <item quantity="one">%1$d dzień</item>
+        <item quantity="few">%1$d dni</item>
+        <item quantity="many">%1$d dni</item>
+        <item quantity="other">%1$d dnia</item>
+    </plurals>
+    <string name="profile_current_streak">obecna seria</string>
+    <string name="profile_record">rekord</string>
+    <string name="profile_freezes_value">%1$d z %2$d</string>
+    <plurals name="profile_next_freeze">
+        <item quantity="one">zamrożenia · następne za %1$d dzień</item>
+        <item quantity="few">zamrożenia · następne za %1$d dni</item>
+        <item quantity="many">zamrożenia · następne za %1$d dni</item>
+        <item quantity="other">zamrożenia · następne za %1$d dnia</item>
+    </plurals>
+    <string name="profile_freezes_full">zamrożenia · maksimum</string>
+    <string name="profile_last_four_weeks">Ostatnie 4 tygodnie</string>
+    <string name="profile_status_clean">Czysty</string>
+    <string name="profile_status_frozen">Zamrożony</string>
+    <string name="profile_status_broken">Przerwany</string>
+    <string name="profile_status_untracked">Nieśledzony</string>
+    <string name="profile_status_in_progress">W toku</string>
+    <string name="profile_status_future">Jeszcze nie</string>
+    <string name="profile_day_description">%1$s: %2$s</string>
+    <string name="profile_my_goals">Moje cele</string>
+    <string name="profile_goal_max">maks. %1$s</string>
+    <string name="save">Zapisz</string>
+
     <!-- Onboarding -->
     <string name="onboarding_next">Dalej</string>
     <string name="onboarding_finish">Zakończ</string>

@@ -26,6 +26,7 @@ import com.justantis.pause.presentation.home.HomeRoute
 import com.justantis.pause.presentation.limitedit.LimitEditRoute
 import com.justantis.pause.presentation.limits.LimitsRoute
 import com.justantis.pause.presentation.onboarding.OnboardingRoute
+import com.justantis.pause.presentation.profile.ProfileRoute
 import com.justantis.pause.presentation.stats.StatsScreen
 
 @Composable
@@ -88,7 +89,10 @@ fun PauseNavHost(
                     LimitEditRoute(onClose = { navController.popBackStack() })
                 }
                 composable<ProfileDestination> {
-                    PlaceholderScreen(title = stringResource(R.string.nav_profile))
+                    ProfileRoute(onOpenSettings = { navController.navigate(SettingsDestination) })
+                }
+                composable<SettingsDestination> {
+                    PlaceholderScreen(title = stringResource(R.string.profile_settings))
                 }
                 composable<FocusDestination> {
                     PlaceholderScreen(title = stringResource(R.string.focus_title))

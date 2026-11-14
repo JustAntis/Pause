@@ -85,6 +85,32 @@
         <item quantity="other">This access will break your %1$d-day streak.</item>
     </plurals>
 
+    <!-- Profile -->
+    <string name="profile_settings">Settings</string>
+    <plurals name="profile_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <string name="profile_current_streak">current streak</string>
+    <string name="profile_record">record</string>
+    <string name="profile_freezes_value">%1$d of %2$d</string>
+    <plurals name="profile_next_freeze">
+        <item quantity="one">freezes · next in %1$d day</item>
+        <item quantity="other">freezes · next in %1$d days</item>
+    </plurals>
+    <string name="profile_freezes_full">freezes · maximum held</string>
+    <string name="profile_last_four_weeks">Last 4 weeks</string>
+    <string name="profile_status_clean">Clean</string>
+    <string name="profile_status_frozen">Frozen</string>
+    <string name="profile_status_broken">Broken</string>
+    <string name="profile_status_untracked">Not tracked</string>
+    <string name="profile_status_in_progress">In progress</string>
+    <string name="profile_status_future">Not yet</string>
+    <string name="profile_day_description">%1$s: %2$s</string>
+    <string name="profile_my_goals">My goals</string>
+    <string name="profile_goal_max">max %1$s</string>
+    <string name="save">Save</string>
+
     <!-- Onboarding -->
     <string name="onboarding_next">Next</string>
     <string name="onboarding_finish">Finish</string>

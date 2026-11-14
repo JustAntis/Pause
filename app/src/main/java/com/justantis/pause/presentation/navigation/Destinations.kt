@@ -24,6 +24,9 @@ data object ProfileDestination
 data object FocusDestination
 
 @Serializable
+data object SettingsDestination
+
+@Serializable
 data class AppDetailsDestination(val packageName: String)
 
 @Serializable
