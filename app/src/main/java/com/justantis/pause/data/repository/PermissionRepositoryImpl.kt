@@ -10,6 +10,7 @@ import android.provider.Settings
 import androidx.core.app.NotificationManagerCompat
 import com.justantis.pause.domain.model.PermissionStatus
 import com.justantis.pause.domain.repository.PermissionRepository
+import com.justantis.pause.service.PauseAccessibilityService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -43,11 +44,7 @@ class PermissionRepositoryImpl @Inject constructor(
             context.contentResolver,
             Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
         ) ?: return false
-        val expected = ComponentName(context.packageName, ACCESSIBILITY_SERVICE_CLASS)
+        val expected = ComponentName(context, PauseAccessibilityService::class.java)
         return enabledServices.split(':').any { ComponentName.unflattenFromString(it) == expected }
-    }
-
-    private companion object {
-        const val ACCESSIBILITY_SERVICE_CLASS = "com.justantis.pause.service.PauseAccessibilityService"
     }
 }

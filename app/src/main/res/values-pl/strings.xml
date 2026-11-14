@@ -1,4 +1,6 @@
 <resources>
+    <string name="accessibility_service_description">Pause używa tej usługi wyłącznie do sprawdzenia, którą aplikację otwierasz, aby pokazać ekran przerwy, gdy dzienny limit tej aplikacji się wyczerpie lub trwa sesja skupienia. Nie odczytuje, nie zbiera ani nie wysyła niczego, co widzisz lub wpisujesz na ekranie. Wszystkie dane zostają na tym telefonie.</string>
+
     <!-- Durations -->
     <string name="duration_minutes">%1$d min</string>
     <string name="duration_hours">%1$d h</string>
