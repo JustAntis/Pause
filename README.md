@@ -8,6 +8,25 @@ supporting the user's digital balance*.
 
 All data stays on the device. The app has no internet permission, no accounts and no analytics.
 
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/home.png" width="200" alt="Home screen with streak, today's screen time and app usage"><br>Home</td>
+    <td align="center"><img src="docs/screenshots/statistics.png" width="200" alt="Statistics for the current week with a bar chart"><br>Statistics</td>
+    <td align="center"><img src="docs/screenshots/limits.png" width="200" alt="Limits list with a used-up limit"><br>Limits</td>
+    <td align="center"><img src="docs/screenshots/profile.png" width="200" alt="Profile with streak, freezes and a four-week calendar"><br>Profile</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/focus.png" width="200" alt="Focus Mode session counting down"><br>Focus Mode</td>
+    <td align="center"><img src="docs/screenshots/break_limit.png" width="200" alt="Break screen shown when a limit is used up"><br>Break screen: limit used up</td>
+    <td align="center"><img src="docs/screenshots/break_pause.png" width="200" alt="Break screen breathing pause with countdown"><br>Break screen: pause</td>
+    <td align="center"><img src="docs/screenshots/break_purpose.png" width="200" alt="Break screen asking for purpose and time"><br>Break screen: purpose and time</td>
+  </tr>
+</table>
+
+Taken on the API 37 emulator with demo history from the debug tools (see below).
+
 ## Features
 
 - **Home** — today's screen time against a goal, unlocks, attempts after limits, top apps, streak.
