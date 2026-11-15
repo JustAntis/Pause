@@ -1,6 +1,7 @@
 # Pause — implementation notes
 
-Written while the app is being built; completed in phase 9. The structure follows §13 of the spec.
+The structure follows §13 of the spec. Phases were built on branches `feature/phase-N-…`, each
+branched from the previous one.
 
 ## 1. What was implemented per phase
 
@@ -10,6 +11,7 @@ Written while the app is being built; completed in phase 9. The structure follow
 | 1 | `domain/model/*`, `UsageEventAggregator`, `PauseDatabase` + DAOs (schema in `app/schemas`), `SettingsDataStore`, `UsageStatsDataSource`, `InstalledAppsDataSource`, repositories + Hilt modules |
 | 2 | Navigation (`Destinations`, `PauseNavHost`, `PauseBottomBar`, `MainViewModel`), Onboarding, Home on real data (`HomeStateMapper`), accessibility service declaration |
 | 3 | Limits list (`LimitsStateMapper`), Limit edit, `AppPickerSheet`, `AppIcon` |
+| 9 | Lint clean (`app/lint.xml`), Room DAO and Compose UI instrumented tests, 48 dp weekday toggles, chart descriptions for screen readers, README, this document; fix for a break screen covered by the blocked app |
 | 8 | `Notifier` + `NotificationHelper`, `NotificationChannels`, `OpenTarget` (notification → screen), limit warning in `EnforcementController`, Focus notifications, `WeeklySummaryCalculator`, `SendWeeklySummaryUseCase`, `WeeklySummaryWorker`, `DeleteAllDataUseCase` + `LocalDataWiper`, Settings (`SettingsViewModel`, `SettingsScreen`), `rememberNotificationPermissionRequest` |
 | 7 | `FocusConfig`, `StartFocusSessionUseCase`, `FinishExpiredFocusSessionUseCase`, `EndFocusSessionEarlyUseCase`, `FocusSessionEndWorker`, Focus Mode (`FocusViewModel`, `FocusScreen`), multi-select `AppPickerSheet`, remaining time on Home, `ForegroundAppResolver` |
 | 6 | `SyncUsageHistoryUseCase`, `UsageSyncWorker`, `WorkManagerScheduler`, `StatisticsRanges`, `StatisticsCalculator`, `GetStatisticsUseCase`, Statistics (`StatsStateMapper`, `StatsViewModel`), `UsageBarChart`, App details (`GetAppDetailsUseCase`, `AppDetailsStateMapper`, `AppDetailsViewModel`, `AppDetailsScreen`) |
@@ -55,6 +57,7 @@ Written while the app is being built; completed in phase 9. The structure follow
 | D34 | Notification permission | Asked when a notification switch is turned on while notifications are off, and on every Focus session start while they are off; Android itself stops showing the dialog after the user declines twice. | §8: in context, not in onboarding. |
 | D35 | Weekly summary | Periodic work every 7 days, first on the next Monday at 09:00 local time; scheduled only while the switch is on (also re-checked on app start). Last week = previous Monday–Sunday, average over days with data; no notification when last week has no data. | §8. |
 | D36 | Delete all data | Cancels all work and notifications, clears Room and DataStore, returns to onboarding. Past days are not imported again from the system's event log after a wipe (the "backfilled" flag is set again). | A wipe should start history fresh from that day. |
+| D37 | Break screen covered by the blocked app | A repeated window event for the app whose break screen is up shows the same break screen again (same attempt, no new record). | Found on the API 37 emulator: Chrome opened its first-run screen 0.2 s after the break screen and stayed on top, because §6.1 says to ignore repeated events for the app in front. |
 | D27 | App details "limit reached" | A day is highlighted when the current limit applied on that weekday and was reached. | Past limits are not stored (as D19). |
 
 ### Debug tools (debug builds only)
@@ -83,16 +86,47 @@ Written while the app is being built; completed in phase 9. The structure follow
 | A7 | Day = today by hour, Week = current Mon–Sun, Month = last 30 days. | `StatisticsRanges` |
 | A8 | 5-minute steps, 5 min – 8 h, one value per app with a weekday mask. | `AppLimit` (`STEP_MINUTES`, `MIN_MINUTES`, `MAX_MINUTES`), `SaveLimitUseCase` (validation), `DaysMask` |
 
-## 4. What could not be verified
+## 4. Verification
 
-_Completed in phase 9._ Verified so far on a Samsung Galaxy S21 FE (SM-G990B2, Android API 36, no lock screen):
+Commands, all passing at the end of phase 9: `./gradlew assembleDebug testDebugUnitTest lintDebug`
+(181 JVM unit tests, lint "No issues found") and
+`ANDROID_SERIAL=emulator-5554 ./gradlew connectedDebugAndroidTest` (9 instrumented tests on the
+`Pause_API_37` emulator only).
+
+**API 37 emulator** (`Pause_API_37`, image `android-37.0` Google Play arm64, created for this work;
+all scripted UI checks ran here):
+
+- The break screen is started from the accessibility service and allowed (`BAL_ALLOW_TOKEN`), so the `TYPE_ACCESSIBILITY_OVERLAY` fallback of §6.3 is not needed on API 37.
+- A 10-minute Chrome limit posted "Chrome: limit almost used up — 5 minutes left for today." and later showed the break screen.
+- Notification taps open the right screen: limit warning → App details, Focus countdown → Focus Mode, weekly summary → Statistics (Week).
+- The Focus notification is ongoing with a system chronometer counting down to the planned end.
+- At 360 dp width and font scale 1.3: Home, Statistics, Limits, Limit edit, Profile, Settings, Focus Mode and the three break screens show no clipped text; the weekday toggles wrap to two rows of 48 dp targets.
+- After `connectedDebugAndroidTest` the accessibility service stayed in the "binding" state until it was turned off and on again; plain app updates (`adb install -r`, twice) re-bound it at once. This comes from the instrumentation run restarting the process, not from the app. **After running instrumented tests, toggle the service in the emulator's accessibility settings.**
+
+**Author's phone** (Samsung Galaxy S21 FE, SM-G990B2, Android API 36, no lock screen). Scripted UI was used here only until phase 8; afterwards the author checked by hand:
 
 - Phase 4 end to end: a 5-minute limit on Chrome showed the break screen 5 minutes after Chrome was opened; the pause (10 s), purpose and "Open for 1 min" returned to Chrome; when the minute expired the break screen came back with 2 attempts and a 30 s hint; "Close" went to the home screen.
 - Phase 7: a 15-minute Focus session on Chrome survived `kill -9` of the app process (the remaining time was 13:33 after 1 min 27 s); the system restarted the process and the accessibility service; opening Chrome showed the Focus break screen with a 30 s pause; after the bypass Focus Mode showed "With breaks"; ending early with confirmation stored CANCELLED. This test also found two defects, both fixed with regression tests: an extra unseen attempt recorded when a change arrived while the break screen was being shown, and no enforcement for an app already in front when the service starts.
 - Phase 8: Settings shows all sections; turning on the weekly summary scheduled `WeeklySummaryWorker` (WorkManager correctly refused a forced early run: "executed before schedule"); the summary notification text was "Daily screen time: 2h 34m (−6% vs previous). Streak: 12 days." (posted via the debug button); a Focus session finished by itself as CLEAN exactly at its planned end and posted "Focus session finished".
-- Starting `BlockActivity` from the accessibility service was allowed on API 36 (`BAL_ALLOW_TOKEN` in the system log), so the `TYPE_ACCESSIBILITY_OVERLAY` fallback was not needed. **Not verified on API 37** (targetSdk); no API 37 device or emulator was available. Manual check: on an API 37 device, set a 5-minute limit, use the app for 5 minutes and confirm the break screen appears; `adb logcat | grep BlockActivity` must show `result code=0`.
+- Starting `BlockActivity` from the accessibility service was allowed on API 36 (`BAL_ALLOW_TOKEN` in the system log).
+- Delete all data (by the author): confirmation shown, app returned to onboarding, both permissions still granted, limits, streak and statistics empty.
+
+**Not verified**, with manual steps:
+
+- **A physical API 37 device.** Only the emulator ran API 37. On a device: set a 5-minute limit, use the app for 5 minutes, confirm the break screen; `adb logcat | grep BlockActivity` must show `result code=0`.
+- **The weekly summary at its real time.** WorkManager correctly refused a forced early run; the notification itself was checked through the debug button. Leave the switch on over a Monday morning and confirm the notification arrives around 09:00.
+- **Battery impact** (thesis chapter 5.4). The controller is event-driven with at most one pending timer, but nothing was measured. Use Battery Historian or `adb shell dumpsys batterystats --charged com.justantis.pause` over a day of normal use.
+- **A day closing at midnight on a device.** Day close and midnight timers are unit-tested with a virtual clock only. Keep a limited app open across midnight and check that the break screen does not appear for the new day and that Profile shows yesterday's status the next morning.
+- **Polish texts.** Translations were not reviewed by a native speaker; switch the device language to Polish and read every screen.
 
 ## 5. Known limitations
 
 - A day is computed from events starting 3 hours before midnight; an app opened earlier than that and still in front without any events is not counted.
-- "Today" on Home and Limits is recomputed when the screen is resumed, not continuously while it is visible.
+- "Today" on Home, Limits and Statistics is recomputed when the screen is resumed, not continuously while it is visible.
+- One app is counted as in front at a time; in split screen the last resumed app gets the time (D3).
+- Unlocks on devices without a lock screen are screen turn-ons and can overcount (D5).
+- Past limits and past accessibility-service state are not stored; whether a past day was tracked, and whether a past day reached its limit in App details, are judged with the current limits (D19, D27).
+- The system keeps raw usage events only for a limited time; days older than that exist only if the 15-minute sync stored them in time. After a reboot the system may have no events for the earlier part of the day (seen on the author's phone).
+- The "5 minutes left" warning is remembered in memory only; after a process restart it can appear once more the same day (D33).
+- The break screen can be bypassed by removing the accessibility service or usage access; Home then shows a warning. Hard blocking is out of scope (§12).
+- Apps that change their window very often while the break screen is up get it shown again each time (D37); no such app was found in testing.
