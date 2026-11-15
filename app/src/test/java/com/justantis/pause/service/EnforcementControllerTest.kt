@@ -260,7 +260,7 @@ class EnforcementControllerTest {
     }
 
     @Test
-    fun `repeated events for the app in front do not block twice`() = runTest {
+    fun `repeated events for the app in front do not record a second attempt`() = runTest {
         val s = setup()
         s.limit(INSTAGRAM, 45)
         s.used(INSTAGRAM, 45)
@@ -271,7 +271,40 @@ class EnforcementControllerTest {
         s.controller.onAppInForeground(INSTAGRAM)
         runCurrent()
 
-        assertEquals(1, s.launcher.shown.size)
+        assertEquals(1, s.blocks.events.value.size)
+    }
+
+    @Test
+    fun `the blocked app covering the break screen brings the same break screen back`() = runTest {
+        val s = setup()
+        s.limit(INSTAGRAM, 45)
+        s.used(INSTAGRAM, 45)
+        runCurrent()
+        s.controller.onAppInForeground(INSTAGRAM)
+        runCurrent()
+
+        s.controller.onAppInForeground(INSTAGRAM)
+        runCurrent()
+
+        assertEquals(2, s.launcher.shown.size)
+        assertEquals(s.launcher.shown[0], s.launcher.shown[1])
+        assertEquals(1, s.blocks.events.value.size)
+    }
+
+    @Test
+    fun `an app event after the break screen was in front is a new arrival`() = runTest {
+        val s = setup()
+        s.limit(INSTAGRAM, 45)
+        s.used(INSTAGRAM, 45)
+        runCurrent()
+        s.controller.onAppInForeground(INSTAGRAM)
+        runCurrent()
+
+        s.controller.onNoAppInForeground()
+        s.controller.onAppInForeground(INSTAGRAM)
+        runCurrent()
+
+        assertEquals(2, s.blocks.events.value.size)
     }
 
     @Test

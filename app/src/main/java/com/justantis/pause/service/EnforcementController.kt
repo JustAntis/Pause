@@ -52,6 +52,7 @@ class EnforcementController @Inject constructor(
     private var launcher: BlockScreenLauncher? = null
     private var foregroundPackage: String? = null
     private var blockShownFor: String? = null
+    private var shownBlock: ShownBlock? = null
     private var checkJob: Job? = null
     private var changesJob: Job? = null
     private val warnedToday = mutableSetOf<Pair<LocalDate, String>>()
@@ -78,8 +79,19 @@ class EnforcementController @Inject constructor(
         blockShownFor = null
     }
 
+    /**
+     * A repeated event for the app whose break screen is up means the app came back over it (for
+     * example it opened another screen while starting); the same break screen is shown again
+     * without a new attempt. Other repeated events are ignored.
+     */
     fun onAppInForeground(packageName: String) {
-        if (packageName == foregroundPackage) return
+        if (packageName == foregroundPackage) {
+            val shown = shownBlock
+            if (blockShownFor == packageName && shown != null) {
+                launcher?.showBlockScreen(shown.packageName, shown.eventId, shown.reason, shown.focusSessionId)
+            }
+            return
+        }
         foregroundPackage = packageName
         blockShownFor = null
         check(packageName)
@@ -154,9 +166,17 @@ class EnforcementController @Inject constructor(
         blockShownFor = packageName
         withContext(NonCancellable) {
             val eventId = blockRepository.recordAttempt(packageName, decision.reason, decision.focusSessionId)
+            shownBlock = ShownBlock(packageName, eventId, decision.reason, decision.focusSessionId)
             launcher.showBlockScreen(packageName, eventId, decision.reason, decision.focusSessionId)
         }
     }
+
+    private data class ShownBlock(
+        val packageName: String,
+        val eventId: Long,
+        val reason: BlockReason,
+        val focusSessionId: Long?
+    )
 
     private sealed interface Decision {
         data object Allow : Decision
